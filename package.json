@@ -1,0 +1,21 @@
+{
+    "scripts": {
+        "postinstall": "(cd BookingWebApi && npm install); (cd BookingWebApp && npm install);",
+        "start": "npm start --prefix BookingWebApi && npm start --prefix BookingWebApp",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MilkaChucky/BookingWebApp.git"
+    },
+    "keywords": [
+        "booking",
+        "app"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/MilkaChucky/BookingWebApp/issues"
+    },
+    "homepage": "https://github.com/MilkaChucky/BookingWebApp#readme"
+}
