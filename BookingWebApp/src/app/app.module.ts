@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 
 import { HomeModule } from './modules/home/home.module';
 import { UtilityModule } from './modules/utility/utility.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { UtilityModule } from './modules/utility/utility.module';
     RouterModule.forRoot(
       routes,
       { enableTracing: true } // <-- debugging purposes only
-    )
+    ),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
