@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
+// Material
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -9,7 +11,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     LandingPageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatToolbarModule
   ],
   exports: [
     LandingPageComponent

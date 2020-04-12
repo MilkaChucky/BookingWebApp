@@ -1,4 +1,31 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html {
+    height: 100%;
+    body {
+        height: 100%;
+        margin: 0;
+        
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        
+        background-color: black;
+        background-image: url(assets/img/bg_vignette.jpg);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: bottom;
+    }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.ghost-button-white {
+    margin-right: 15px;
+    padding: 10px 15px 10px 15px;
+    background-color: black;
+    border: white solid 1px;
+    color: white;
+    border-radius: 0px;
+    font-variant: small-caps;
+}
