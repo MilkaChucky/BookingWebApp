@@ -31,9 +31,9 @@ passport.deserializeUser((user, done) => {
     return done(null, user);
 });
 
-passport.use('local', new LocalStrategy(async (username, password, done) => {
+passport.use('local', new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
     try {
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({ email: username });
 
         if (user) {
             try {
@@ -48,7 +48,7 @@ passport.use('local', new LocalStrategy(async (username, password, done) => {
                 return done('There was an error when comparing the passwords')
             }
         } else {
-            return done('There is no registered user with that username!');
+            return done('There is no registered user with that email address!');
         }
     } catch (error) {
         return done('There was an error while retrieving the user');

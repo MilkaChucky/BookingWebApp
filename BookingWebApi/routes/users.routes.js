@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 
 router.route('/login')
     .post((req, res) => {
-        if (req.body.username && req.body.password) {
+        if (req.body.email && req.body.password) {
             passport.authenticate('local', (error, user) => {
                 if (error) {
                     return res.status(403).send(error);
@@ -16,7 +16,7 @@ router.route('/login')
                 }
             })(req, res);
         } else {
-            res.status(400).send('Missing username or password!');
+            res.status(400).send('Missing email or password!');
         }
     });
 
@@ -32,21 +32,24 @@ router.route('/logout')
 
 router.route('/register')
     .post(async (req, res) => {
-        if (req.body.username && req.body.password) {
+        if (req.body.email && req.body.password) {
             const user = new User({
-                username: req.body.username,
-                password: req.body.password,
-                role: 'guest'
+                email: req.body.email,
+                password: req.body.password
             });
 
             try {
                 await user.save();
                 return res.status(200).send('User registered');
             } catch (error) {
-                return res.status(500).send(error);
+                if (error.name === 'ValidationError') {
+                    return res.status(400).send(error.message);
+                } else {
+                    return res.status(500).send(error);
+                }
             }
         } else {
-            return res.status(400).send('Username or password is missing!');
+            return res.status(400).send('Email address or password is missing!');
         }
     });
 

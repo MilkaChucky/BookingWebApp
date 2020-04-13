@@ -2,26 +2,32 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const schema = new Schema({
-    username: { type: String, unique: true, required: true },
-    password: { type: String, required: true },
-    role: { type: String }
+    email: { type: String,
+        required: [true, 'Email address must be provided!'],
+        unique: [true, 'Email address is already registered!'],
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'The email must be a valid email address!']
+    },
+    password: { type: String,
+        required: [true, 'Password must be provided!']
+    },
+    role: { type: String, default: 'guest' }
 });
 
-schema.pre('save', function(next) {
+schema.pre('save', async function(next) {
     const user = this;
+
     if(user.isModified('password')) {
-        bcrypt.genSalt(10, function(err, salt) {
-            if(err) return next('There was an error during the salt generation');
-            bcrypt.hash(user.password, salt, function(error, hash) {
-                if(error) return next('There was en error during the hashing procedure');
-                user.password = hash;
-                return next();
-            })
-        })
-    } else {
-        console.log('The password wasnt modified since the last save');
-        return next();
+        try {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(user.password, salt);
+
+            user.password = hash;
+        } catch (error) {
+            return next('There was an error during hashing the password!')
+        }
     }
+
+    return next();
 });
 
 schema.methods.passwordMatch = async function(password) {
