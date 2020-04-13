@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login-modal',
@@ -13,7 +14,8 @@ export class LoginModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<LoginModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.loginForm = new FormGroup({
       email: new FormControl('', [
@@ -29,9 +31,15 @@ export class LoginModalComponent implements OnInit {
 
   }
 
-  login() {
-    this.snackBar.open('Not implemented yet!', 'Warning', {
-      duration: 2000
+  async login() {
+    this.authService.login(
+      this.loginForm.get('email').value,
+      this.loginForm.get('pswd').value
+    ).subscribe( res => {
+      this.snackBar.open('Succesful login!', 'Auth', {
+        duration: 2000
+      });
+      this.dialogRef.close();
     });
   }
 
