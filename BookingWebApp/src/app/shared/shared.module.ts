@@ -4,22 +4,26 @@ import { MaterialModule } from './material.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule, Routes, Router } from '@angular/router';
 import { routes } from './../app-routing.module';
+import { HeaderNavBarComponent } from './components/header-nav-bar/header-nav-bar.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
+    MaterialModule,
     RouterModule.forRoot(
       routes,
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
   declarations: [
-    FooterComponent
+    FooterComponent,
+    HeaderNavBarComponent
   ],
   exports: [
     MaterialModule,
     FooterComponent,
+    HeaderNavBarComponent,
     RouterModule
   ]
 })
