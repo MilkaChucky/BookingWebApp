@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './modules/home/home.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { UtilityModule } from './modules/utility/utility.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { UtilityModule } from './modules/utility/utility.module';
     HomeModule,
     BookingModule,
     UtilityModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AdminModule
   ],
   providers: [],
   bootstrap: [AppComponent]

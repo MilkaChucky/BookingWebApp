@@ -5,6 +5,7 @@ import { PageNotFoundComponent } from './modules/utility/page-not-found/page-not
 import { AuthGuard } from './modules/authentication/auth.guard';
 import { HotelNavigationComponent } from './modules/booking/hotel-navigation/hotel-navigation.component';
 import { RoomNavigationComponent } from './modules/booking/room-navigation/room-navigation.component';
+import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin-navigation.component';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -18,6 +19,15 @@ export const routes: Routes = [
       {
         path: ':id/rooms',
         component: RoomNavigationComponent
+      }
+    ]
+  },
+  { path: 'admin',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: AdminNavigationComponent
       }
     ]
   },
