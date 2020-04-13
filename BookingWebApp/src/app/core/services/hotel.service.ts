@@ -49,6 +49,26 @@ export class HotelService {
     return of([]);
   }
 
+  updateHotelScore(id: number, score: number): Observable<number> {
+    const index = HOTELS.findIndex(h => h.id === id);
+    if (index !== undefined && index > -1) {
+      HOTELS[index].review = score;
+      return of(score);
+    } else {
+      return of(-1);
+    }
+  }
+
+  updateHotel(dto: HotelModel): Observable<HotelModel> {
+    const index = HOTELS.findIndex(h => h.id === dto.id);
+    if (index !== undefined && index > -1) {
+      HOTELS[index] = dto;
+      return of(HOTELS[index]);
+    } else {
+      return of(undefined);
+    }
+  }
+
   deleteHotel(id: number): Observable<number> {
     return of(id);
   }
