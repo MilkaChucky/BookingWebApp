@@ -3,6 +3,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoginModalComponent } from 'src/app/modules/authentication/login-modal/login-modal.component';
 import { SupportModalComponent } from '../support-modal/support-modal.component';
+import { AuthenticationService } from 'src/app/modules/authentication/services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header-nav-bar',
@@ -12,7 +14,9 @@ import { SupportModalComponent } from '../support-modal/support-modal.component'
 export class HeaderNavBarComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              public auth: AuthenticationService,
+              private route: Router) { }
 
   ngOnInit() {
   }
@@ -31,7 +35,15 @@ export class HeaderNavBarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed, result: ', result);
+      console.log('The dialog was closed, result: ', result); // TODO: remove console.log
+      this.route.navigate(['booking']);
+    });
+  }
+
+  logout() {
+    this.auth.logout();
+    this.snackBar.open('Sikeres kijelentkezés!', 'Auth', {
+      duration: 2000
     });
   }
 
@@ -43,7 +55,7 @@ export class HeaderNavBarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed, result: ', result);
+      console.log('The dialog was closed, result: ', result); // TODO: remove console.log
     });
   }
 

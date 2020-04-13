@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { HomeModule } from './modules/home/home.module';
+import { BookingModule } from './modules/booking/booking.module';
 import { UtilityModule } from './modules/utility/utility.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -17,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     HomeModule,
+    BookingModule,
     UtilityModule,
     SharedModule,
     BrowserAnimationsModule

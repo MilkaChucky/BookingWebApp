@@ -16,7 +16,7 @@ import { SupportModalComponent } from './components/support-modal/support-modal.
     RouterModule.forRoot(
       routes,
       { enableTracing: true } // <-- debugging purposes only
-    ),
+    ),  // TODO: remove in finished
     AuthenticationModule
   ],
   declarations: [

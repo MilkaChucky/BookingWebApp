@@ -3,9 +3,16 @@
         <span>FindYourRoom Hotel Room Booking</span>
         <span class="spacer"></span>
         <button 
+            *ngIf='!auth.isAuthenticated()'
             (click)='login()'
             class="ghost-button-white">
             Login
+        </button>
+        <button 
+            *ngIf='auth.isAuthenticated()'
+            (click)='logout()'
+            class="ghost-button-white">
+            Logout
         </button>
         <button
             (click)='support()'
