@@ -46,8 +46,8 @@ testem.log
 Thumbs.db
 
 # Dependency graph
-BookingWebApp/documentation.zip
-BookingWebApp/documentation/dependencies.dot
-BookingWebApp/documentation/dependencies.html
-BookingWebApp/documentation/dependencies.json
-BookingWebApp/documentation/dependencies.svg
+documentation.zip
+documentation/dependencies.dot
+documentation/dependencies.html
+documentation/dependencies.json
+documentation/dependencies.svg
