@@ -1,18 +1,19 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './assets/scss/ghost.scss';
 
 html {
     height: 100%;
-    body {
+    body, app-root {
         height: 100%;
         margin: 0;
-        
+    }
+    body {
         font-family: Roboto, "Helvetica Neue", sans-serif;
-        
         background-color: black;
         background-image: url(assets/img/bg_vignette.jpg);
-        background-size: contain;
+        background-size: 70%;
+        background-position: center;
         background-repeat: no-repeat;
-        background-position: bottom;
     }
 }
 
@@ -20,12 +21,7 @@ html {
   flex: 1 1 auto;
 }
 
-.ghost-button-white {
-    margin-right: 15px;
-    padding: 10px 15px 10px 15px;
-    background-color: black;
-    border: white solid 1px;
+.header-navbar-white {
+    background-color: transparent;
     color: white;
-    border-radius: 0px;
-    font-variant: small-caps;
 }

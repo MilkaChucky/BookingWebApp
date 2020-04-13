@@ -1,0 +1,19 @@
+%ghost-button {
+    margin-right: 15px;
+    padding: 10px 15px 10px 15px;
+    background-color: transparent;
+    border-radius: 0px;
+    font-variant: small-caps;
+}
+
+.ghost-button-white {
+    @extend %ghost-button;
+    border: white solid 1px;
+    color: white;
+}
+
+.ghost-button-black {
+    @extend %ghost-button;
+    border: black solid 1px;
+    color: black;
+}
