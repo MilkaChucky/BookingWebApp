@@ -32,7 +32,8 @@ const ROOMS: RoomModel[] = [
   {id: 1, hotelId: 1, beds: 25, free: true, roomNumber: 3},
   {id: 2, hotelId: 1, beds: 54, free: true, roomNumber: 2},
   {id: 3, hotelId: 0, beds: 35, free: true, roomNumber: 33422},
-  {id: 4, hotelId: 3, beds: 15, free: true, roomNumber: 42}
+  {id: 4, hotelId: 0, beds: 1, free: false, roomNumber: 1},
+  {id: 5, hotelId: 3, beds: 15, free: true, roomNumber: 42}
 ]
 
 @Injectable({
@@ -43,6 +44,15 @@ export class HotelService {
 
   getHotels(): Observable<HotelModel[]> {
     return of(HOTELS);
+  }
+
+  getHotel(id: number): Observable<HotelModel> {
+    const temp = HOTELS.find(h => h.id === id);
+    if (!!temp) {
+      return of(temp);
+    } else {
+      return of(undefined);
+    }
   }
 
   addHotel(dto: HotelModel): Observable<object> {
@@ -84,5 +94,9 @@ export class HotelService {
 
   deleteRoom(id: number): Observable<number> {
     return of(id);
+  }
+
+  bookRooms(idList: number[]): Observable<boolean> {
+    return of(true);
   }
 }

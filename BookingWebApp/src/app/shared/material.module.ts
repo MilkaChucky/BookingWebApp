@@ -21,6 +21,8 @@ import { MatSliderModule } from '@angular/material/';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -46,7 +48,9 @@ import { MatDialogModule } from '@angular/material/dialog';
         MatSliderModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTableModule,
+        MatPaginatorModule
     ],
     exports: [
         MatButtonModule,
@@ -69,7 +73,9 @@ import { MatDialogModule } from '@angular/material/dialog';
         MatSliderModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTableModule,
+        MatPaginatorModule
     ]
 })
 export class MaterialModule { }
