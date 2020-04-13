@@ -1,11 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from './../../shared/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginModalComponent } from './login-modal/login-modal.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
-
+import { SharedModule } from './../../shared/shared.module'
 
 @NgModule({
   declarations: [
@@ -13,16 +9,13 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MaterialModule,
-    HttpClientModule
+    SharedModule
+  ],
+  exports: [
+    LoginModalComponent
   ],
   entryComponents: [
     LoginModalComponent
-  ],
-  providers: [
-    HttpClientModule
   ]
 })
 export class AuthenticationModule { }

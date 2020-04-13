@@ -1,0 +1,6 @@
+div.hotel-cards {
+    display: grid;
+    grid-row-gap: 130px;
+    grid-auto-rows: 10vmax;
+    grid-template-columns: 25fr 25fr 25fr 25fr;
+}

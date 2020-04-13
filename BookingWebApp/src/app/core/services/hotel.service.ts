@@ -7,11 +7,24 @@ import { RoomModel } from './../../shared/models/RoomModel';
 import { of, Observable } from 'rxjs';
 
 const HOTELS: HotelModel[] = [
-  {id: 0, address: 'asd', name: 'Lerrington', price: 5},
-  {id: 1, address: 'ges', name: 'Grand', price: 5},
-  {id: 2, address: 'vsvd', name: 'Not Grand', price: 10},
-  {id: 3, address: 'bs', name: '"Grander"', price: 15},
-  {id: 4, address: 'sdasd', name: 'Most Grandest Grandier Grand Grandness', price: 99999}
+  { id: 0, address: 'asd', name: 'Lerrington', price: 5 },
+  { id: 1, address: 'ges', name: 'Grand', price: 5, review: 3 },
+  { id: 2, address: 'vsvd', name: 'Not Grand', price: 10, review: 2 },
+  { id: 3, address: 'bs', name: '"Grander"', price: 15, review: 1 },
+  { id: 4, address: 'sdasd', name: 'Most Grandest Grandier Grand Grandness', price: 99999, review: 5 },
+  // duplicated
+  { id: 5, address: 'asd', name: 'Lerrington', price: 5 },
+  { id: 6, address: 'ges', name: 'Grand', price: 5, review: 3 },
+  { id: 7, address: 'vsvd', name: 'Not Grand', price: 10, review: 2 },
+  { id: 8, address: 'bs', name: '"Grander"', price: 15, review: 1 },
+  { id: 9, address: 'sdasd', name: 'Most Grandest Grandier Grand Grandness', price: 99999, review: 5 },
+  // duplicated
+  { id: 10, address: 'asd', name: 'Lerrington', price: 5 },
+  { id: 11, address: 'ges', name: 'Grand', price: 5, review: 3 },
+  { id: 12, address: 'vsvd', name: 'Not Grand', price: 10, review: 2 },
+  { id: 13, address: 'bs', name: '"Grander"', price: 15, review: 1 },
+  { id: 14, address: 'sdasd', name: '?', price: 99999, review: 5 },
+  { id: 15, address: 'sdasd', name: 'Most Grandest Grandier Grand Grandness', price: 99999, review: 5 }
 ];
 
 const ROOMS: RoomModel[] = [

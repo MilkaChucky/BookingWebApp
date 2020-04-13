@@ -3,4 +3,5 @@ export interface HotelModel {
     name: string;
     address: string;
     price: number;
+    review?: number;
 }
