@@ -6,6 +6,7 @@ import { RouterModule, Routes, Router } from '@angular/router';
 import { routes } from './../app-routing.module';
 import { HeaderNavBarComponent } from './components/header-nav-bar/header-nav-bar.component';
 import { AuthenticationModule } from './../modules/authentication/authentication.module';
+import { SupportModalComponent } from './components/support-modal/support-modal.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { AuthenticationModule } from './../modules/authentication/authentication
   ],
   declarations: [
     FooterComponent,
-    HeaderNavBarComponent
+    HeaderNavBarComponent,
+    SupportModalComponent
   ],
   exports: [
     MaterialModule,
@@ -28,6 +30,9 @@ import { AuthenticationModule } from './../modules/authentication/authentication
     HeaderNavBarComponent,
     RouterModule,
     AuthenticationModule
+  ],
+  entryComponents: [
+    SupportModalComponent
   ]
 })
 export class SharedModule { }
