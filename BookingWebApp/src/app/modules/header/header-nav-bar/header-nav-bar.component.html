@@ -3,6 +3,18 @@
         <span>FindYourRoom Hotel Room Booking</span>
         <span class="spacer"></span>
         <button 
+            *ngIf='auth.isAuthenticated()' 
+            routerLink='/booking'
+            class="ghost-button-white">
+            Booking
+        </button>
+        <button
+            *ngIf='auth.isAuthenticated()' 
+            routerLink='/admin' 
+            class="ghost-button-white">
+            Admin
+        </button>
+        <button 
             *ngIf='!auth.isAuthenticated()'
             (click)='login()'
             class="ghost-button-white">
@@ -19,5 +31,10 @@
             class="ghost-button-white">
             Support
         </button>
+        <mat-icon 
+            class="ghost-mat-icon-white" 
+            routerLink='/home'>
+            house
+        </mat-icon>
     </mat-toolbar-row>
 </mat-toolbar>

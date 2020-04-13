@@ -36,7 +36,6 @@ export class HeaderNavBarComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed, result: ', result); // TODO: remove console.log
-      this.route.navigate(['booking']);
     });
   }
 
