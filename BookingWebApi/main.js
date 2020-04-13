@@ -3,7 +3,8 @@ const expressSession = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const { Strategy: LocalStrategy } = require('passport-local');
+const { port, secret } = require('./config');
 
 const app = express();
 
@@ -29,8 +30,10 @@ passport.use('local', new LocalStrategy((username, password, done) => {
     }
 }));
 
+app.use(expressSession({ secret: secret }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-
-app.listen(3000, () => {
-    console.log('BookingWebApi is running');
+app.listen(port, () => {
+    console.log(`BookingWebApi is running on port ${port}`);
 });
