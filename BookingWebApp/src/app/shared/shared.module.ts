@@ -5,6 +5,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule, Routes, Router } from '@angular/router';
 import { routes } from './../app-routing.module';
 import { HeaderNavBarComponent } from './components/header-nav-bar/header-nav-bar.component';
+import { AuthenticationModule } from './../modules/authentication/authentication.module';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { HeaderNavBarComponent } from './components/header-nav-bar/header-nav-ba
     RouterModule.forRoot(
       routes,
       { enableTracing: true } // <-- debugging purposes only
-    )
+    ),
+    AuthenticationModule
   ],
   declarations: [
     FooterComponent,
@@ -24,7 +26,8 @@ import { HeaderNavBarComponent } from './components/header-nav-bar/header-nav-ba
     MaterialModule,
     FooterComponent,
     HeaderNavBarComponent,
-    RouterModule
+    RouterModule,
+    AuthenticationModule
   ]
 })
 export class SharedModule { }
