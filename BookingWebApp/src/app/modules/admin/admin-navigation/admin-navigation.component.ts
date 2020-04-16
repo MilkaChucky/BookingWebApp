@@ -122,4 +122,40 @@ export class AdminNavigationComponent implements OnInit {
     });
   }
 
+  addRoom() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
+  editRoom() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
+  deleteRoom() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
+  addHotel() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
+  editHotel() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
+  deleteHotel() {
+    this.snack.open('Not implemented yet!', 'Error', {
+      duration: 2000
+    });
+  }
+
 }
