@@ -60,7 +60,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/users', require('./routes/users.routes'));
-//app.use('/api/hotels', require('./routes/hotels.routes'));
+app.use('/api/hotels', require('./routes/hotels.routes'));
 //app.use('/api/bookings', require('./routes/bookings.routes'));
 
 app.listen(port, () => {
