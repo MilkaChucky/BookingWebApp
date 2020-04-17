@@ -56,7 +56,7 @@ export class HotelService {
   }
 
   addHotel(dto: HotelModel): Observable<object> {
-    return of([]);
+    return of(dto);
   }
 
   updateHotelScore(id: number, score: number): Observable<number> {
@@ -79,7 +79,7 @@ export class HotelService {
     }
   }
 
-  deleteHotel(id: number): Observable<number> {
+  deleteHotel(id: number[]): Observable<number[]> {
     return of(id);
   }
 
