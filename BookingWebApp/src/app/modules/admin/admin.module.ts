@@ -4,13 +4,15 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AdminNavigationComponent } from './admin-navigation/admin-navigation.component';
 import { AddHotelModalComponent } from './admin-navigation/modals/add-hotel-modal/add-hotel-modal.component';
+import { AddRoomModalComponent } from './admin-navigation/modals/add-room-modal/add-room-modal.component';
 
 
 
 @NgModule({
   declarations: [
     AdminNavigationComponent,
-    AddHotelModalComponent
+    AddHotelModalComponent,
+    AddRoomModalComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { AddHotelModalComponent } from './admin-navigation/modals/add-hotel-moda
     AdminNavigationComponent
   ],
   entryComponents: [
-    AddHotelModalComponent
+    AddHotelModalComponent,
+    AddRoomModalComponent
   ]
 })
 export class AdminModule { }

@@ -92,7 +92,7 @@ export class HotelService {
     return of([]);
   }
 
-  deleteRoom(id: number): Observable<number> {
+  deleteRoom(id: number[]): Observable<number[]> {
     return of(id);
   }
 

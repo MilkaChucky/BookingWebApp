@@ -6,6 +6,7 @@ import { MatPaginator, MatTableDataSource, MatSnackBar, MatDialog } from '@angul
 import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { AddHotelModalComponent } from './modals/add-hotel-modal/add-hotel-modal.component';
+import { AddRoomModalComponent } from './modals/add-room-modal/add-room-modal.component';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -17,7 +18,7 @@ export class AdminNavigationComponent implements OnInit {
   @ViewChild('DetailsPaginator', { static: true }) detailsPaginator: MatPaginator;
 
   displayedColumns: string[] = ['id', 'name', 'address', 'price', 'review'];
-  displayedColumnsRooms: string[] = ['id', 'roomNumber', 'beds', 'free'];
+  displayedColumnsRooms: string[] = ['id', 'hotelId', 'roomNumber', 'beds', 'free'];
   dataSource: MatTableDataSource<HotelModel>;
   selection: SelectionModel<HotelModel>;
   dataSourceRooms: MatTableDataSource<RoomModel>;
@@ -150,7 +151,7 @@ export class AdminNavigationComponent implements OnInit {
 
   editHotel() {
     if (!!!this.selection || !!!this.selection.selected || this.selection.selected.length === 0) {
-      this.snack.open('Please, select an hotel to edit first!', 'Warning', {
+      this.snack.open('Please, select a hotel to edit first!', 'Warning', {
         duration: 2000
       });
       return;
@@ -208,20 +209,85 @@ export class AdminNavigationComponent implements OnInit {
   }
 
   addRoom() {
-    this.snack.open('Not implemented yet!', 'Error', {
-      duration: 2000
+    const dialogRef = this.dialog.open(AddRoomModalComponent, {
+      width: '500px',
+      panelClass: 'ghost-dialog-white',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
+      if (!!result && !!result.model) {
+        this.hService.addRoom(result.model).subscribe(res => {
+          if (!!res) {
+            this.snack.open('Save successful!', 'Update', {
+              duration: 2000
+            });
+          } else {
+            this.snack.open('Error while saving!', 'Error', {
+              duration: 2000
+            });
+          }
+        });
+      }
     });
   }
 
   editRoom() {
-    this.snack.open('Not implemented yet!', 'Error', {
-      duration: 2000
+    if (!!!this.rSelection || !!!this.rSelection.selected || this.rSelection.selected.length === 0) {
+      this.snack.open('Please, select a room to edit first!', 'Warning', {
+        duration: 2000
+      });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AddRoomModalComponent, {
+      width: '500px',
+      panelClass: 'ghost-dialog-white',
+      data: { model: this.rSelection.selected[0]}
+    });
+
+    dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
+      if (!!result && !!result.model) {
+        this.hService.addRoom(result.model).subscribe(res => {
+          if (!!res) {
+            this.snack.open('Save successful!', 'Update', {
+              duration: 2000
+            });
+          } else {
+            this.snack.open('Error while saving!', 'Error', {
+              duration: 2000
+            });
+          }
+        });
+      }
     });
   }
 
   deleteRoom() {
-    this.snack.open('Not implemented yet!', 'Error', {
-      duration: 2000
+    if (!!!this.rSelection || !!!this.rSelection.selected || this.rSelection.selected.length === 0) {
+      this.snack.open('Please, select one or more room to delete first!', 'Warning', {
+        duration: 2000
+      });
+      return;
+    }
+
+    const idsToDelete = [];
+    this.selection.selected.forEach(h => {
+      idsToDelete.push(h.id);
+    });
+
+    this.selection.clear();
+
+    this.hService.deleteRoom(idsToDelete).subscribe(res => {
+      if (!!res) {
+        this.snack.open('Deleted successfully!', 'Update', {
+          duration: 2000
+        });
+      } else {
+        this.snack.open('Error while deleting!', 'Error', {
+          duration: 2000
+        });
+      }
     });
   }
 }

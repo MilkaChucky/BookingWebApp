@@ -59,6 +59,12 @@
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
+        <!-- Hotel Id Column -->
+        <ng-container matColumnDef="hotelId">
+            <th mat-header-cell *matHeaderCellDef> HotelId </th>
+            <td mat-cell *matCellDef="let element"> {{element.hotelId}} </td>
+        </ng-container>
+
         <!-- RoomNumber Column -->
         <ng-container matColumnDef="roomNumber">
             <th mat-header-cell *matHeaderCellDef> No. </th>

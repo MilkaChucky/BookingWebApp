@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Add Hotel</h1>
+<div mat-dialog-content>
+    <form [formGroup]='roomForm'>
+        <mat-form-field>
+            <mat-label>Hotel</mat-label>
+            <mat-select matInput type='text' formControlName='hotelId' required>
+                <mat-option *ngFor='let h of hotels' [value]='h.id'>{{h.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>RoomNumber</mat-label>
+            <input matInput type='number' formControlName='roomNumber' required />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Number of Beds</mat-label>
+            <input matInput type='number' formControlName='beds' required />
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="save()" cdkFocusInitial>Save</button>
+    <button mat-button [mat-dialog-close]>Cancel</button>
+</div>
