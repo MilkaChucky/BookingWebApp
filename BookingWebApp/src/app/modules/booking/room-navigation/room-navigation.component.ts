@@ -60,7 +60,7 @@ export class RoomNavigationComponent implements OnInit {
 
   bookRoom() {
     if (this.selection === undefined || this.selection.selected.length === 0) {
-      this.snack.open('Error while saving!', 'Error', {
+      this.snack.open('Please, first select a room to book!', 'Error', {
         duration: 2000
       });
       return;

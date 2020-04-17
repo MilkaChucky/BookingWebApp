@@ -1,7 +1,7 @@
 <div class="toolbar">
-    <mat-icon (click)='addHotel()' class="ghost-mat-icon-white">add</mat-icon>
-    <mat-icon (click)='editHotel()' class="ghost-mat-icon-white">edit</mat-icon>
-    <mat-icon (click)='deleteHotel()' class="ghost-mat-icon-white">delete</mat-icon>
+    <mat-icon matTooltip='add new hotel' (click)='addHotel()' class="ghost-mat-icon-white">add</mat-icon>
+    <mat-icon matTooltip='edit selected hotel' (click)='editHotel()' class="ghost-mat-icon-white">edit</mat-icon>
+    <mat-icon matTooltip='delete selected hotel(s)' (click)='deleteHotel()' class="ghost-mat-icon-white">delete</mat-icon>
 </div>
 
 <div class="mat-elevation-z8 table-wrapper">
@@ -46,9 +46,9 @@
 </div>
 
 <div class="toolbar">
-    <mat-icon (click)='addRoom()' class="ghost-mat-icon-white">add</mat-icon>
-    <mat-icon (click)='editRoom()' class="ghost-mat-icon-white">edit</mat-icon>
-    <mat-icon (click)='deleteRoom()' class="ghost-mat-icon-white">delete</mat-icon>
+    <mat-icon matTooltip='add new room to selected hotel' (click)='addRoom()' class="ghost-mat-icon-white">add</mat-icon>
+    <mat-icon matTooltip='edit selected room' (click)='editRoom()' class="ghost-mat-icon-white">edit</mat-icon>
+    <mat-icon matTooltip='delete selected room(s)' (click)='deleteRoom()' class="ghost-mat-icon-white">delete</mat-icon>
 </div>
 
 <div class="mat-elevation-z8 table-wrapper">
