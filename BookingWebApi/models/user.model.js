@@ -17,7 +17,22 @@ const schema = new Schema({
         select: false
     },
     role: { type: String, default: 'guest' }
-}, { toObject: { versionKey: false }, toJSON: { versionKey: false } });
+}, {
+    toObject: {
+        versionKey: false,
+        transform: function (doc, ret) {
+            delete ret.password;
+            return ret;
+        }
+    },
+    toJSON: {
+        versionKey: false,
+        transform: function (doc, ret) {
+            delete ret.password;
+            return ret;
+        }
+    }
+});
 
 schema.pre('save', async function (next) {
     if (this.isModified('password')) {

@@ -13,7 +13,7 @@ router.route('/login')
                     } else {
                         req.login(user, (error) => {
                             if (error) return res.status(500).send(error);
-                            return res.status(200).send('Login successful');
+                            return res.status(200).json(user);
                         });
                     }
                 })(req, res);
@@ -40,8 +40,8 @@ router.route('/register')
                 });
 
                 try {
-                    await user.save();
-                    return res.status(200).send('User registered');
+                    const registeredUser = await user.save();
+                    return res.status(200).json(registeredUser);
                 } catch (error) {
                     if (error.name === 'ValidationError') {
                         return res.status(400).send(error.message);

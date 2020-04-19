@@ -1,22 +1,26 @@
 const express = require('express');
+const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const { port, secret, mongodb } = require('./config');
-const { connect:ConnectToMongoDB, connection:dbConnection } = require('mongoose');
+const { connect:ConnectToMongoDB } = require('mongoose');
 const User = require('./models/user.model');
 
 const app = express();
 
 ConnectToMongoDB(mongodb.buildUrl(), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
     })
     .then(() => console.log(`Successfully connected to ${mongodb.database} database`))
     .catch((error) => console.log('Error during the database connection', error));
 
+app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
