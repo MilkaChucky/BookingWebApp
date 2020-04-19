@@ -40,9 +40,16 @@ export class HeaderNavBarComponent implements OnInit {
   }
 
   logout() {
-    this.auth.logout();
-    this.snackBar.open('Sikeres kijelentkezés!', 'Auth', {
-      duration: 2000
+    this.auth.logout().subscribe(res => {
+      if (!!res) {
+        this.snackBar.open('Successful logout!', 'Update', {
+          duration: 2000
+        });
+      } else {
+        this.snackBar.open('Error while logging out!', 'Error', {
+          duration: 2000
+        });
+      }
     });
   }
 

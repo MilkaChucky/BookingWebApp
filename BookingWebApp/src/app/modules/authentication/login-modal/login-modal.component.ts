@@ -43,9 +43,15 @@ export class LoginModalComponent implements OnInit {
     });
   }
 
-  signup() {
-    this.snackBar.open('Not implemented yet!', 'Warning', {
-      duration: 2000
+  async signup() {
+    this.authService.register(
+      this.loginForm.get('email').value,
+      this.loginForm.get('pswd').value
+    ).subscribe(res => {
+      this.snackBar.open('Succesful login!', 'Auth', {
+        duration: 2000
+      });
+      this.dialogRef.close();
     });
   }
 
