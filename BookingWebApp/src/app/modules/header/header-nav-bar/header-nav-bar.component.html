@@ -1,0 +1,40 @@
+<mat-toolbar class="header-navbar-white">
+    <mat-toolbar-row>
+        <span>FindYourRoom Hotel Room Booking</span>
+        <span class="spacer"></span>
+        <button 
+            *ngIf='auth.isAuthAndGuest()' 
+            routerLink='/booking'
+            class="ghost-button-white">
+            Booking
+        </button>
+        <button
+            *ngIf='auth.isAuthAndAdmin()' 
+            routerLink='/admin' 
+            class="ghost-button-white">
+            Admin
+        </button>
+        <button 
+            *ngIf='!auth.isAuthenticated()'
+            (click)='login()'
+            class="ghost-button-white">
+            Login
+        </button>
+        <button 
+            *ngIf='auth.isAuthenticated()'
+            (click)='logout()'
+            class="ghost-button-white">
+            Logout
+        </button>
+        <button
+            (click)='support()'
+            class="ghost-button-white">
+            Support
+        </button>
+        <mat-icon 
+            class="ghost-mat-icon-white" 
+            routerLink='/home'>
+            house
+        </mat-icon>
+    </mat-toolbar-row>
+</mat-toolbar>

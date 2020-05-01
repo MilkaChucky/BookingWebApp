@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>LogIn / Sign Up</h1>
+<div mat-dialog-content>
+    <form [formGroup]='loginForm'>
+        <mat-form-field>
+            <mat-label>Email Address</mat-label>
+            <input matInput
+                type='email'
+                formControlName='email'/>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput
+                type='password'
+                formControlName='pswd'/>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="login()">LogIn</button>
+    <button mat-button (click)="signup()">SignUp</button>
+    <button mat-button [mat-dialog-close] cdkFocusInitial>Cancel</button>
+</div>

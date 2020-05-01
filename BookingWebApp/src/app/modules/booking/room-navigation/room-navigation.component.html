@@ -1,0 +1,36 @@
+<div class="toolbar">
+    <mat-icon matTooltip='booking selected room' (click)='bookRoom()' class="ghost-mat-icon-white">book</mat-icon>
+</div>
+
+<div class="mat-elevation-z8 table-wrapper">
+    <table mat-table [dataSource]="dataSource">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="roomNumber">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.roomNumber}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="beds">
+            <th mat-header-cell *matHeaderCellDef> Beds </th>
+            <td mat-cell *matCellDef="let element"> {{element.beds}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="free">
+            <th mat-header-cell *matHeaderCellDef> Free </th>
+            <td mat-cell *matCellDef="let element"> {{element.free}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            (click)='selectRow(row)'
+            [class.selected]='selection.isSelected(row)'>
+        </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+</div>

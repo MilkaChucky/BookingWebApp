@@ -1,0 +1,15 @@
+span {
+    min-width: 100%;
+    color: rgba(100, 100, 100, 0.4);
+    position: fixed;
+    bottom: 5px;
+    left: 0px;
+    text-align: center;
+    font-size: small;
+    transition-duration: .5s;
+    &:hover {
+        color: white;
+        background-color: black;
+        transition-duration: .5s;
+    }
+}

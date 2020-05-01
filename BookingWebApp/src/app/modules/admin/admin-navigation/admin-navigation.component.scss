@@ -1,0 +1,20 @@
+div.table-wrapper {
+    display: block;
+    position: relative;
+    width: 90%;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    table, .mat-paginator {
+        width: 100%;
+        tr.selected {
+            background-color: beige;
+        }
+    }
+}
+
+div.toolbar {
+    position: relative;
+    margin-left: 10%;
+    margin-top: 10%;
+}

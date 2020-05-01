@@ -44,3 +44,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Dependency graph
+documentation.zip
+documentation/dependencies.dot
+documentation/dependencies.html
+documentation/dependencies.json
+documentation/dependencies.svg
