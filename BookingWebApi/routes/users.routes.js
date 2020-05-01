@@ -27,7 +27,8 @@ router.route('/logout')
         requireLogin('Log in, before you log out!'),
         (req, res) => {
             req.logout();
-            res.status(200).send('Logout successful');
+            // Need to return empty JSON so Angular2+ won't treat code: 200 as error!
+            res.status(200).send("{}");
         });
 
 router.route('/register')

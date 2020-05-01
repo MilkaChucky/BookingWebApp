@@ -20,7 +20,7 @@ ConnectToMongoDB(mongodb.buildUrl(), {
     .then(() => console.log(`Successfully connected to ${mongodb.database} database`))
     .catch((error) => console.log('Error during the database connection', error));
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
