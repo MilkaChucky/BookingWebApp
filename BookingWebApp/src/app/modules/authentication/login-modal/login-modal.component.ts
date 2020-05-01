@@ -27,9 +27,7 @@ export class LoginModalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   async login() {
     this.authService.login(
@@ -40,6 +38,10 @@ export class LoginModalComponent implements OnInit {
         duration: 2000
       });
       this.dialogRef.close();
+    }, err => {
+      this.snackBar.open('Error while logging in!', 'Error', {
+        duration: 2000
+      });
     });
   }
 
@@ -48,10 +50,14 @@ export class LoginModalComponent implements OnInit {
       this.loginForm.get('email').value,
       this.loginForm.get('pswd').value
     ).subscribe(res => {
-      this.snackBar.open('Succesful login!', 'Auth', {
+      this.snackBar.open('Succesful registration!', 'Auth', {
         duration: 2000
       });
       this.dialogRef.close();
+    }, err => {
+      this.snackBar.open('Error during registration!', 'Error', {
+        duration: 2000
+      });
     });
   }
 

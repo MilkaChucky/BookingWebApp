@@ -18,14 +18,7 @@ export class HeaderNavBarComponent implements OnInit {
               public auth: AuthenticationService,
               private route: Router) { }
 
-  ngOnInit() {
-  }
-
-  notImplementedMsg() {
-    this.snackBar.open('Not implemented yet.', 'Warning', {
-      duration: 2000
-    });
-  }
+  ngOnInit() {}
 
   login() {
     const dialogRef = this.dialog.open(LoginModalComponent, {
@@ -33,23 +26,17 @@ export class HeaderNavBarComponent implements OnInit {
       panelClass: 'ghost-dialog-white',
       data: {}
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed, result: ', result); // TODO: remove console.log
-    });
   }
 
   logout() {
     this.auth.logout().subscribe(res => {
-      if (!!res) {
-        this.snackBar.open('Successful logout!', 'Update', {
-          duration: 2000
-        });
-      } else {
+      this.snackBar.open('Successful logout!', 'Auth', {
+        duration: 2000
+      });
+    }, err => {
         this.snackBar.open('Error while logging out!', 'Error', {
           duration: 2000
         });
-      }
     });
   }
 
@@ -58,10 +45,6 @@ export class HeaderNavBarComponent implements OnInit {
       width: '500px',
       panelClass: 'ghost-dialog-white',
       data: {}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed, result: ', result); // TODO: remove console.log
     });
   }
 
