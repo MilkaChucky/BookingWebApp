@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from './../../../../environments/environment';
 import { UserModel } from './../../../shared/models/UserModel';
 import { Router } from '@angular/router';
+import { LoginData } from 'src/app/shared/models/LoginData';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<UserModel>;
   public currentUser: Observable<UserModel>;
-  readonly backendUrl = 'http://localhost:3000/api/';
+  readonly backendUrl = environment.backendUrl;
 
   constructor(private http: HttpClient, private router: Router) {
     this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('currentUser')));
@@ -22,50 +23,60 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  register(email: string, password: string): Observable<string> {
-    const url = this.backendUrl + 'register';
-    const loginData = { email, password };
-    let result = 'error';
-
-    this.http.post<object>(url, loginData).subscribe(res => {
-      if (!!res) {
-        const user = { email, role: 'guest' } as UserModel;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next({ email, role: 'guest' } as UserModel);
-        result = 'success';
-      }
+  register(email: string, password: string): Observable<UserModel> {
+    const url = this.backendUrl + 'users/register';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    const loginData = { email, password } as LoginData;
+    let result;
+    this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions).subscribe(res => {
+      result = res;
+    }, err => {
+        console.error(err);
     });
-
     return of(result);
   }
 
   login(email: string, password: string): Observable<string> {
-    const url = this.backendUrl + 'login';
+    const url = this.backendUrl + 'users/login';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      withCredentials: true
+    };
     const loginData = { email, password };
     let result = 'error';
-
-    this.http.post<object>(url, loginData).subscribe( res => {
-      if (!!res) {
-        const user = { email, role: 'admin' } as UserModel;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next({ email, role: 'admin' } as UserModel);
-        result = 'success';
-      }
+    this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions).subscribe( res => {
+      const user = res as UserModel;
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      this.currentUserSubject.next(user);
+      result = 'success';
+    }, err => {
+      console.error(err);
     });
-
     return of(result);
   }
 
-  logout(): Observable<any> {
-    const url = this.backendUrl + 'logout';
-    let result;
-    this.http.post<object>(url, {}).subscribe(res => {
-      result = res;
-      if (!!res) {
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
-        this.router.navigate(['']);
-      }
+  logout(): Observable<boolean> {
+    const url = this.backendUrl + 'users/logout';
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      withCredentials: true
+    };
+    let result = false;
+    this.http.post<object>(url, JSON.stringify(this.currentUserValue), httpOptions).subscribe(res => {
+      result = true;
+      localStorage.removeItem('currentUser');
+      this.currentUserSubject.next(null);
+      this.router.navigate(['']);
+    }, err => {
+      console.error(err);
     });
     return of(result);
   }
