@@ -5,8 +5,8 @@ import { RoomModel } from 'src/app/shared/models/RoomModel';
 import { MatPaginator, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
-import { AddHotelModalComponent } from './modals/add-hotel-modal/add-hotel-modal.component';
-import { AddRoomModalComponent } from './modals/add-room-modal/add-room-modal.component';
+import { EditHotelComponent } from './edit/edit-hotel/edit-hotel.component';
+import { AddRoomModalComponent } from './edit/edit-room/add-room-modal.component';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -17,8 +17,8 @@ export class AdminNavigationComponent implements OnInit {
   @ViewChild('MasterPaginator', { static: true }) masterPaginator: MatPaginator;
   @ViewChild('DetailsPaginator', { static: true }) detailsPaginator: MatPaginator;
 
-  displayedColumns: string[] = ['id', 'name', 'address', 'price', 'review'];
-  displayedColumnsRooms: string[] = ['id', 'hotelId', 'roomNumber', 'beds', 'free'];
+  displayedColumns: string[] = ['_id', 'name', 'address'];
+  displayedColumnsRooms: string[] = ['_id', 'number', 'beds', 'price', 'free'];
   dataSource: MatTableDataSource<HotelModel>;
   selection: SelectionModel<HotelModel>;
   dataSourceRooms: MatTableDataSource<RoomModel>;
@@ -37,45 +37,42 @@ export class AdminNavigationComponent implements OnInit {
 
   async ngOnInit() {
     this.hService.getHotels().subscribe(res => {
-      if (!!res) {
-        this.hotels = res;
-        this.dataSource = new MatTableDataSource<HotelModel>(this.hotels);
-      } else {
-        this.dataSource = new MatTableDataSource<HotelModel>([]);
-      }
+      this.hotels = res;
+      this.dataSource = new MatTableDataSource<HotelModel>(this.hotels);
+      this.rooms = [];
+      this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
+
+      const initialSelection = [];
+      const allowMultiSelect = true;
+      this.selection = new SelectionModel<HotelModel>(allowMultiSelect, initialSelection);
+
+      const initialRoomSelection = [];
+      const allowMultiSelectRooms = true;
+      this.rSelection = new SelectionModel<RoomModel>(allowMultiSelectRooms, initialRoomSelection);
+
+      this.dataSource.paginator = this.masterPaginator;
+      this.dataSourceRooms.paginator = this.detailsPaginator;
+
+      // TODO: remove after implementing booking
+      this.hotels.forEach(h => {
+        h.rooms.forEach(r => {
+          r.free = true;
+        });
+      });
     });
-    this.rooms = [];
-    this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
-
-    const initialSelection = [];
-    const allowMultiSelect = true;
-    this.selection = new SelectionModel<HotelModel>(allowMultiSelect, initialSelection);
-
-    const initialRoomSelection = [];
-    const allowMultiSelectRooms = true;
-    this.rSelection = new SelectionModel<RoomModel>(allowMultiSelectRooms, initialRoomSelection);
-
-    this.dataSource.paginator = this.masterPaginator;
-    this.dataSourceRooms.paginator = this.detailsPaginator;
   }
 
   async selectRow(row: HotelModel) {
     if (this.selection.isSelected(row)) {
       this.selection.deselect(row);
-      this.hService.getRoomsForHotel(row.id).subscribe(res => {
-        if (!!res && res.length > 0) {
-          this.rooms = [].concat(this.rooms.filter(r => r.hotelId !== row.id));
-          this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
-        }
+      this.rooms = this.rooms.filter(r => {
+        return row.rooms.find(x => x === r) === undefined;
       });
+      this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
     } else {
       this.selection.select(row);
-      this.hService.getRoomsForHotel(row.id).subscribe(res => {
-        if (!!res && res.length > 0) {
-          this.rooms = this.rooms.concat(res);
-          this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
-        }
-      });
+      this.rooms = this.rooms.concat(row.rooms);
+      this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
     }
   }
 
@@ -110,7 +107,7 @@ export class AdminNavigationComponent implements OnInit {
     }
     const idList = [];
     this.selection.selected.forEach(r => {
-      idList.push(r.id);
+      idList.push(r._id);
     });
     this.hService.bookRooms(idList).subscribe(res => {
       if (!!res) {
@@ -126,107 +123,64 @@ export class AdminNavigationComponent implements OnInit {
   }
 
   addHotel() {
-    const dialogRef = this.dialog.open(AddHotelModalComponent, {
-      width: '500px',
-      panelClass: 'ghost-dialog-white',
-      data: {}
-    });
-
-    dialogRef.afterClosed().subscribe((result: {model: HotelModel}) => {
-      if (!!result && !!result.model) {
-        this.hService.addHotel(result.model).subscribe( res => {
-          if (!!res) {
-            this.snack.open('Save successful!', 'Update', {
-              duration: 2000
-            });
-          } else {
-            this.snack.open('Error while saving!', 'Error', {
-              duration: 2000
-            });
-          }
-        });
-      }
-    });
+    this.router.navigate(['admin', 'add-hotel']);
   }
 
   editHotel() {
     if (!!!this.selection || !!!this.selection.selected || this.selection.selected.length === 0) {
-      this.snack.open('Please, select a hotel to edit first!', 'Warning', {
-        duration: 2000
-      });
+      this.snack.open('Please, select a hotel to edit first!', 'Warning', { duration: 2000 });
       return;
     }
-
-    const dialogRef = this.dialog.open(AddHotelModalComponent, {
-      width: '500px',
-      panelClass: 'ghost-dialog-white',
-      data: {model: this.selection.selected[0]}
-    });
-
-    dialogRef.afterClosed().subscribe((result: { model: HotelModel }) => {
-      if (!!result && !!result.model) {
-        this.hService.updateHotel(result.model).subscribe(res => {
-          if (!!res) {
-            this.snack.open('Save successful!', 'Update', {
-              duration: 2000
-            });
-          } else {
-            this.snack.open('Error while saving!', 'Error', {
-              duration: 2000
-            });
-          }
-        });
-      }
-    });
+    this.router.navigate(['admin', 'edit-hotel', this.selection.selected[0]._id]);
   }
 
   deleteHotel() {
     if (!!!this.selection || !!!this.selection.selected || this.selection.selected.length === 0) {
-      this.snack.open('Please, select one or more hotel to delete first!', 'Warning', {
-        duration: 2000
-      });
+      this.snack.open('Please, select one or more hotel to delete first!', 'Warning', { duration: 2000 });
       return;
     }
-
-    const idsToDelete = [];
-    this.selection.selected.forEach(h => {
-      idsToDelete.push(h.id);
-    });
-
     this.selection.clear();
-
-    this.hService.deleteHotel(idsToDelete).subscribe(res => {
-      if (!!res) {
-        this.snack.open('Deleted successfully!', 'Update', {
-          duration: 2000
-        });
-      } else {
-        this.snack.open('Error while deleting!', 'Error', {
-          duration: 2000
-        });
-      }
+    this.selection.selected.forEach(h => {
+      this.dataSource.data = this.dataSource.data.filter(x => x._id !== h._id);
+      this.hService.deleteHotel(h._id).subscribe(res => {
+        if (!!res) {
+          this.snack.open('Deleted successfully!', 'Update', {
+            duration: 2000
+          });
+        } else {
+          this.snack.open('Error while deleting!', 'Error', {
+            duration: 2000
+          });
+        }
+      });
     });
   }
 
   addRoom() {
+    if (!!!this.selection || !!!this.selection.selected || this.selection.selected.length === 0) {
+      this.snack.open('Please, select one or more hotel to add room to first!', 'Warning', { duration: 2000 });
+      return;
+    }
     const dialogRef = this.dialog.open(AddRoomModalComponent, {
-      width: '500px',
-      panelClass: 'ghost-dialog-white',
-      data: {}
+      width: '500px', panelClass: 'ghost-dialog-white', data: { }
     });
-
     dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
+      console.log(result);
       if (!!result && !!result.model) {
-        this.hService.addRoom(result.model).subscribe(res => {
-          if (!!res) {
-            this.snack.open('Save successful!', 'Update', {
-              duration: 2000
-            });
-          } else {
-            this.snack.open('Error while saving!', 'Error', {
-              duration: 2000
-            });
-          }
+        this.selection.selected[0].rooms.push(result.model);
+        this.rooms.push(result.model);
+        this.rooms = this.rooms.filter(r => {
+          return this.selection.selected[0].rooms.find(x => x === r) === undefined;
+        });
+        this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
+        this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
+          this.snack.open('Save successful!', 'Update', {
+            duration: 2000
+          });
+        }, err => {
+          this.snack.open('Error while saving!', 'Error', {
+            duration: 2000
+          });
         });
       }
     });
@@ -234,30 +188,30 @@ export class AdminNavigationComponent implements OnInit {
 
   editRoom() {
     if (!!!this.rSelection || !!!this.rSelection.selected || this.rSelection.selected.length === 0) {
-      this.snack.open('Please, select a room to edit first!', 'Warning', {
-        duration: 2000
-      });
+      this.snack.open('Please, select a room to edit first!', 'Warning', { duration: 2000 });
       return;
     }
-
     const dialogRef = this.dialog.open(AddRoomModalComponent, {
-      width: '500px',
-      panelClass: 'ghost-dialog-white',
-      data: { model: this.rSelection.selected[0]}
+      width: '500px', panelClass: 'ghost-dialog-white',
+      data: { model: this.rSelection.selected[0] }
     });
-
     dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
       if (!!result && !!result.model) {
-        this.hService.addRoom(result.model).subscribe(res => {
-          if (!!res) {
-            this.snack.open('Save successful!', 'Update', {
-              duration: 2000
-            });
-          } else {
-            this.snack.open('Error while saving!', 'Error', {
-              duration: 2000
-            });
+        this.selection.selected[0].rooms.forEach(r => {
+          if (r._id === result.model._id) {
+            r = result.model;
+            return;
           }
+        });
+        this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
+          this.selection.selected[0].rooms.push(result.model);
+          this.snack.open('Save successful!', 'Update', {
+            duration: 2000
+          });
+        }, err => {
+          this.snack.open('Error while saving!', 'Error', {
+            duration: 2000
+          });
         });
       }
     });
@@ -271,23 +225,19 @@ export class AdminNavigationComponent implements OnInit {
       return;
     }
 
-    const idsToDelete = [];
-    this.selection.selected.forEach(h => {
-      idsToDelete.push(h.id);
+    this.rSelection.selected.forEach(h => {
+      this.selection.selected[0].rooms = this.selection.selected[0].rooms.filter(r => r._id !== h._id);
     });
 
+    this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
+      this.snack.open('Delete successful!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snack.open('Error while deleting rooms!', 'Error', {
+        duration: 2000
+      });
+    });
     this.selection.clear();
-
-    this.hService.deleteRoom(idsToDelete).subscribe(res => {
-      if (!!res) {
-        this.snack.open('Deleted successfully!', 'Update', {
-          duration: 2000
-        });
-      } else {
-        this.snack.open('Error while deleting!', 'Error', {
-          duration: 2000
-        });
-      }
-    });
   }
 }

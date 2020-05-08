@@ -23,25 +23,7 @@ export class HotelCardComponent implements OnInit {
   }
 
   goToRoomNavigation(): void {
-    this.router.navigate(['booking', this.hotel.id, 'rooms']);
-  }
-
-  updateScore(): void {
-    if (!!this.slider) {
-      this.hService.updateHotelScore(this.hotel.id, this.slider.value).subscribe( res => {
-        if (res > -1) {
-          this.snack.open('Score saved successfully!', 'Update', {
-            duration: 2000,
-            politeness: 'polite'
-          });
-        }
-      });
-    } else {
-      this.snack.open('Error while saving score. Try again later!', 'Error', {
-        duration: 2000,
-        politeness: 'assertive'
-      });
-    }
+    this.router.navigate(['booking', this.hotel._id, 'rooms']);
   }
 
 }

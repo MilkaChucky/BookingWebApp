@@ -6,6 +6,7 @@ import { AuthGuard } from './modules/authentication/auth.guard';
 import { HotelNavigationComponent } from './modules/booking/hotel-navigation/hotel-navigation.component';
 import { RoomNavigationComponent } from './modules/booking/room-navigation/room-navigation.component';
 import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin-navigation.component';
+import { EditHotelComponent } from './modules/admin/admin-navigation/edit/edit-hotel/edit-hotel.component';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -28,6 +29,14 @@ export const routes: Routes = [
       {
         path: '',
         component: AdminNavigationComponent
+      },
+      {
+        path: 'add-hotel',
+        component: EditHotelComponent
+      },
+      {
+        path: 'edit-hotel/:id',
+        component: EditHotelComponent
       }
     ]
   },

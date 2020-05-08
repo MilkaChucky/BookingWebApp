@@ -14,6 +14,8 @@ export class AddRoomModalComponent implements OnInit {
   roomForm: FormGroup;
   model: RoomModel;
   hotels: HotelModel[];
+  isNew = false;
+  hotelId: string;
 
   constructor(
     public dialogRef: MatDialogRef<AddRoomModalComponent>,
@@ -23,6 +25,8 @@ export class AddRoomModalComponent implements OnInit {
   ) {
     if (!!data && !!data.model) {
       this.model = data.model;
+    } else {
+      this.isNew = true;
     }
   }
 
@@ -39,10 +43,7 @@ export class AddRoomModalComponent implements OnInit {
 
     if (!!this.model) {
       this.roomForm = new FormGroup({
-        hotelId: new FormControl(this.model.hotelId, [
-          Validators.required
-        ]),
-        roomNumber: new FormControl(this.model.roomNumber, [
+        number: new FormControl(this.model.number, [
           Validators.required
         ]),
         beds: new FormControl(this.model.beds, [
@@ -52,10 +53,7 @@ export class AddRoomModalComponent implements OnInit {
     } else {
       this.model = {} as RoomModel;
       this.roomForm = new FormGroup({
-        hotelId: new FormControl('', [
-          Validators.required
-        ]),
-        roomNumber: new FormControl('', [
+        number: new FormControl('', [
           Validators.required
         ]),
         beds: new FormControl('', [
@@ -66,8 +64,7 @@ export class AddRoomModalComponent implements OnInit {
   }
 
   updateModelWithForm() {
-    this.model.hotelId = parseInt(this.roomForm.get('hotelId').value, 10);
-    this.model.roomNumber = parseInt(this.roomForm.get('roomNumber').value, 10);
+    this.model.number = parseInt(this.roomForm.get('number').value, 10);
     this.model.beds = parseInt(this.roomForm.get('beds').value, 10);
   }
 
@@ -76,7 +73,9 @@ export class AddRoomModalComponent implements OnInit {
       duration: 2000
     });
     this.updateModelWithForm();
-    this.dialogRef.close({ model: this.model });
+    this.dialogRef.close({
+      model: this.model
+    });
   }
 
 }

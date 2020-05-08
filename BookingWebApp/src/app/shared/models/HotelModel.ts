@@ -1,7 +1,8 @@
+import { RoomModel } from './RoomModel';
+
 export interface HotelModel {
-    id: number;
+    _id: string;
     name: string;
     address: string;
-    price: number;
-    review?: number;
+    rooms: RoomModel[];
 }

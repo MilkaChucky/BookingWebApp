@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RoomModel } from 'src/app/shared/models/RoomModel';
 import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { HotelModel } from 'src/app/shared/models/HotelModel';
 
 @Component({
   selector: 'app-room-navigation',
@@ -18,6 +19,7 @@ export class RoomNavigationComponent implements OnInit {
   selection: SelectionModel<RoomModel>;
 
   rooms: RoomModel[];
+  hotels: HotelModel[];
 
   constructor(
     private hService: HotelService,
@@ -27,14 +29,11 @@ export class RoomNavigationComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const id = parseInt(this.route.snapshot.params.id, 10);
-    this.hService.getRoomsForHotel(id).subscribe( res => {
-      if (!!res) {
-        this.rooms = res;
-        this.dataSource = new MatTableDataSource<RoomModel>(this.rooms);
-      } else {
-        this.dataSource = new MatTableDataSource<RoomModel>([]);
-      }
+    const id = this.route.snapshot.params.id;
+    this.hService.getHotels().subscribe(res => {
+      this.hotels = res;
+      this.rooms = this.hotels.find(x => x._id === id).rooms;
+      this.dataSource = new MatTableDataSource<RoomModel>(this.rooms);
     });
 
     const initialSelection = [];
@@ -67,7 +66,7 @@ export class RoomNavigationComponent implements OnInit {
     }
     const idList = [];
     this.selection.selected.forEach(r => {
-      idList.push(r.id);
+      idList.push(r._id);
     });
     this.hService.bookRooms(idList).subscribe(res => {
       if (!!res) {
