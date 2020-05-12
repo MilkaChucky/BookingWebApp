@@ -6,7 +6,7 @@ router.route('/')
     .get(
         async (req, res) => {
             try {
-                const hotels = await Hotel.find({});
+                const hotels = await Hotel.find({}).exec();
 
                 return res.status(200).json(hotels);
             } catch (error) {
@@ -34,7 +34,7 @@ router.route('/:hotelId')
     .get(
         async (req, res) => {
             try {
-                const hotel = await Hotel.findById(req.params.hotelId);
+                const hotel = await Hotel.findById(req.params.hotelId).exec();
 
                 return res.status(200).json(hotel);
             } catch (error) {
@@ -46,7 +46,7 @@ router.route('/:hotelId')
         async (req, res) => {
             try {
                 const hotel = new Hotel({ ...req.body, _id: req.params.hotelId });
-                await Hotel.replaceOne({ _id: req.params.hotelId }, hotel);
+                await Hotel.replaceOne({ _id: req.params.hotelId }, hotel).exec();
 
                 return res.status(200).json(hotel);
             } catch (error) {
@@ -61,7 +61,7 @@ router.route('/:hotelId')
         allowForRole('admin'),
         async (req, res) => {
             try {
-                const hotel = await Hotel.findByIdAndDelete(req.params.hotelId);
+                const hotel = await Hotel.findByIdAndDelete(req.params.hotelId).exec();
 
                 return res.status(200).json(hotel);
             } catch (error) {
@@ -69,6 +69,6 @@ router.route('/:hotelId')
             }
         });
 
-// router.use('/:hotelId/rooms', require('./rooms.routes'));
+router.use('/:hotelId/rooms', require('./rooms.routes'));
 
 module.exports = router;
