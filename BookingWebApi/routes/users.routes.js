@@ -60,7 +60,7 @@ router.route('/profile')
         requireLogin(),
         async (req, res) => {
             try {
-                const user = await User.findById(req.user._id);
+                const user = await User.findById(req.user._id).exec();
 
                 res.status(200).json(user);
             } catch (error) {
@@ -76,7 +76,7 @@ router.route('/profile')
                     ...req.body,
                     _id: req.user._id,
                     role: req.user.role
-                });
+                }, { runValidators: true, new: true }).exec();
 
                 res.status(200).json(updated);
             } catch (error) {

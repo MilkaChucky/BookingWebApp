@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { port, secret, mongodb } = loadConfig(
+const { port, secret, mongodb, email } = loadConfig(
     process.env.BOOKING_WEB_API_ENV || './environments/environment.json');
 
 function loadConfig(path) {
@@ -21,5 +21,16 @@ module.exports = {
         buildUrl: function () {
             return `mongodb://${this.host}:${this.port}/${this.database}`;
         }
+    },
+    email: {
+        service: process.env.EMAIL_SERVICE || 'gmail',
+        authType: process.env.EMAIL_AUTH_TYPE || 'login',
+        user: process.env.EMAIL_USER || '',
+        password: process.env.EMAIL_PASSWORD || '',
+        clientId: process.env.EMAIL_CLIENT_ID || '',
+        clientSecret: process.env.EMAIL_CLIENT_SECRET || '',
+        refreshToken: process.env.EMAIL_REFRESH_TOKEN || '',
+        accessToken: process.env.EMAIL_ACCESS_TOKEN || '',
+        ...email
     }
 }

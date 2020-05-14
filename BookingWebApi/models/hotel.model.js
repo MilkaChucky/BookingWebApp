@@ -28,7 +28,7 @@ const schema = new Schema({
         type: [roomSchema],
         validate: [
             function (values) {
-                return values.length === (new Set(values.map(value => value._id))).size;
+                return values.length === (new Set(values.map(value => value.number))).size;
             },
             'The room number must be unique!'
         ]
