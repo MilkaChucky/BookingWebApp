@@ -106,3 +106,6 @@ dist
 # Environments
 environments/**
 !environments/environment.json
+
+# Uploads
+upload/
