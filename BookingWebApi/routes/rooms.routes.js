@@ -15,7 +15,7 @@ router.route('/')
 
                 return res.status(200).json(rooms);
             } catch (error) {
-                return res.status(500).send(error);
+                return res.status(500).json({ error: error });
             }
         })
     .post(
@@ -29,10 +29,17 @@ router.route('/')
 
                 return res.status(200).json(savedRoom);
             } catch (error) {
-                if (error.name === 'ValidationError') {
-                    return res.status(400).send(error.message);
-                } else {
-                    return res.status(500).send(error);
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
                 }
             }
         });
@@ -51,7 +58,7 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(room);
             } catch (error) {
-                return res.status(500).send(error);
+                return res.status(500).json({ error: error });
             }
         })
     .put(
@@ -65,10 +72,17 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(hotel.rooms[i]);
             } catch (error) {
-                if (error.name === 'ValidationError') {
-                    return res.status(400).send(error.message);
-                } else {
-                    return res.status(500).send(error);
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
                 }
             }
         })
@@ -83,7 +97,7 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(room);
             } catch (error) {
-                return res.status(500).send(error);
+                return res.status(500).json({ error: error });
             }
         });
 
