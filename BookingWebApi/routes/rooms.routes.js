@@ -1,7 +1,12 @@
 const router = require('express').Router({ mergeParams: true });
+const path = require('path');
 const { allowForRole } = require('../middlewares/auth.middlewares');
-const { Types:{ ObjectId } } = require('mongoose');
+const { saveFiles, deleteFiles } = require('../middlewares/file.middlewares');
+const { imageFolderPath } = require('../config');
+const { Types: { ObjectId } } = require('mongoose');
 const Hotel = require('../models/hotel.model');
+
+const roomImagesPath = path.normalize(`${imageFolderPath}/rooms`);
 
 router.route('/')
     .get(
@@ -98,6 +103,72 @@ router.route('/:roomNumber')
                 return res.status(200).json(room);
             } catch (error) {
                 return res.status(500).json({ error: error });
+            }
+        });
+
+router.route('/:roomNumber/images')
+    .post(
+        allowForRole('admin'),
+        saveFiles(roomImagesPath),
+        async (req, res) => {
+            if (!req.uploadResult) {
+                return res.status(400).json({ message: 'No images have been uploaded!' });
+            }
+
+            try {
+                await Hotel.findOneAndUpdate({
+                    _id: ObjectId(req.params.hotelId),
+                    'rooms.number': req.params.roomNumber
+                }, {
+                    $addToSet: { 'rooms.$.images': { $each: req.uploadResult.savedImages.map(info => info.name) } }
+                });
+
+                return res.status(200).json(req.uploadResult);
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
+            }
+        })
+    .delete(
+        allowForRole('admin'),
+        deleteFiles(roomImagesPath),
+        async (req, res) => {
+            if (!req.deleteResult) {
+                return res.status(400).json({ message: 'No images have been deleted!' });
+            }
+
+            try {
+                await Hotel.findOneAndUpdate({
+                    _id: ObjectId(req.params.hotelId),
+                    'rooms.number': req.params.roomNumber
+                }, {
+                    $pullAll: { 'rooms.$.images': req.deleteResult.deletedImages }
+                });
+
+                return res.status(200).json(req.deleteResult);
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
             }
         });
 

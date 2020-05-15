@@ -12,6 +12,9 @@ const roomSchema = new Schema({
     price: {
         type: Number,
         required: [true, 'The room price must be provided!']
+    },
+    images: {
+        type: [String]
     }
 }, { toObject: { versionKey: false }, toJSON: { versionKey: false } });
 
@@ -23,6 +26,9 @@ const schema = new Schema({
     address: {
         type: String,
         required: [true, 'The hotel address must be provided!']
+    },
+    images: {
+        type: [String]
     },
     rooms: {
         type: [roomSchema],
