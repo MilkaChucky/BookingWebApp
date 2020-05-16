@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AdminNavigationComponent } from './admin-navigation/admin-navigation.component';
 import { EditHotelComponent } from './admin-navigation/edit/edit-hotel/edit-hotel.component';
-import { AddRoomModalComponent } from './admin-navigation/edit/edit-room/add-room-modal.component';
+import { EditRoomComponent } from './admin-navigation/edit/edit-room/edit-room.component';
 
 
 
@@ -12,7 +12,7 @@ import { AddRoomModalComponent } from './admin-navigation/edit/edit-room/add-roo
   declarations: [
     AdminNavigationComponent,
     EditHotelComponent,
-    AddRoomModalComponent
+    EditRoomComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +23,7 @@ import { AddRoomModalComponent } from './admin-navigation/edit/edit-room/add-roo
   ],
   entryComponents: [
     EditHotelComponent,
-    AddRoomModalComponent
+    EditRoomComponent
   ]
 })
 export class AdminModule { }

@@ -1,12 +1,12 @@
 <h1 class="ghost-headline-white">{{this.isNew ? 'Add' : 'Edit'}} Hotel</h1>
-<form *ngIf='isPageInitialized' class="ghost-form-white" [formGroup]='hotelForm'>
+<form *ngIf='isPageInitialized' class="ghost-form-white" [formGroup]='roomForm'>
     <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput type='text' formControlName='name' required />
+        <mat-label>RoomNumber</mat-label>
+        <input matInput type='number' formControlName='number' required />
     </mat-form-field>
     <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input matInput type='text' formControlName='address' required />
+        <mat-label>Number of Beds</mat-label>
+        <input matInput type='number' formControlName='beds' required />
     </mat-form-field>
     <div>
         <mat-label>Photo</mat-label>

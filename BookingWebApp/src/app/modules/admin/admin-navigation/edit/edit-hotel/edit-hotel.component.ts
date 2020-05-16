@@ -85,7 +85,7 @@ export class EditHotelComponent implements OnInit {
           duration: 2000
         });
         if (!!this.fileToUpload) {
-          this.savePhoto(this.fileToUpload, res._id);
+          this.uploadPhoto(this.fileToUpload, res._id);
         }
         this.router.navigate(['admin']);
       }, err => {
@@ -99,7 +99,7 @@ export class EditHotelComponent implements OnInit {
           duration: 2000
         });
         if (!!this.fileToUpload) {
-          this.savePhoto(this.fileToUpload, res._id);
+          this.uploadPhoto(this.fileToUpload, res._id);
         }
         this.router.navigate(['admin']);
       }, err => {
@@ -110,7 +110,7 @@ export class EditHotelComponent implements OnInit {
     }
   }
 
-  savePhoto(file: File, id: string): void {
+  uploadPhoto(file: File, id: string): void {
     this.hService.uploadHotelImage(file, id).subscribe(res => {
       this.snackBar.open('Photo upload successful!', 'Update', {
         duration: 2000
@@ -127,7 +127,7 @@ export class EditHotelComponent implements OnInit {
     this.router.navigate(['admin']);
   }
 
-  uploadPhoto(files: FileList): void {
+  getPhotoFile(files: FileList): void {
     this.fileToUpload = files.item(0);
   }
 

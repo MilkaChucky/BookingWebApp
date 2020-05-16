@@ -7,6 +7,7 @@ import { HotelNavigationComponent } from './modules/booking/hotel-navigation/hot
 import { RoomNavigationComponent } from './modules/booking/room-navigation/room-navigation.component';
 import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin-navigation.component';
 import { EditHotelComponent } from './modules/admin/admin-navigation/edit/edit-hotel/edit-hotel.component';
+import { EditRoomComponent } from './modules/admin/admin-navigation/edit/edit-room/edit-room.component';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -37,6 +38,14 @@ export const routes: Routes = [
       {
         path: 'edit-hotel/:id',
         component: EditHotelComponent
+      },
+      {
+        path: 'add-room',
+        component: EditRoomComponent
+      },
+      {
+        path: 'edit-room/:id',
+        component: EditRoomComponent
       }
     ]
   },

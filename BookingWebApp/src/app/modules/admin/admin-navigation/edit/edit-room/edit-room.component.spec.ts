@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddRoomModalComponent } from './add-room-modal.component';
+import { EditRoomComponent } from './edit-room.component';
 
 describe('AddRoomModalComponent', () => {
-  let component: AddRoomModalComponent;
-  let fixture: ComponentFixture<AddRoomModalComponent>;
+  let component: EditRoomComponent;
+  let fixture: ComponentFixture<EditRoomComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddRoomModalComponent ]
+      declarations: [ EditRoomComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddRoomModalComponent);
+    fixture = TestBed.createComponent(EditRoomComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

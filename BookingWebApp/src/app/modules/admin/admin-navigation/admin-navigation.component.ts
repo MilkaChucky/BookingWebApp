@@ -6,7 +6,7 @@ import { MatPaginator, MatTableDataSource, MatSnackBar, MatDialog } from '@angul
 import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { EditHotelComponent } from './edit/edit-hotel/edit-hotel.component';
-import { AddRoomModalComponent } from './edit/edit-room/add-room-modal.component';
+import { EditRoomComponent } from './edit/edit-room/edit-room.component';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -161,32 +161,7 @@ export class AdminNavigationComponent implements OnInit {
       this.snack.open('Please, select one or more hotel to add room to first!', 'Warning', { duration: 2000 });
       return;
     }
-    const dialogRef = this.dialog.open(AddRoomModalComponent, {
-      width: '500px', panelClass: 'ghost-dialog-white', data: { }
-    });
-    dialogRef.afterClosed().subscribe((result: { model: RoomModel, photo?: File }) => {
-      console.log(result);
-      if (!!result && !!result.model) {
-        this.selection.selected[0].rooms.push(result.model);
-        this.rooms.push(result.model);
-        this.rooms = this.rooms.filter(r => {
-          return this.selection.selected[0].rooms.find(x => x === r) === undefined;
-        });
-        this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
-        this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
-          this.snack.open('Save successful!', 'Update', {
-            duration: 2000
-          });
-          if (!!result.photo) {
-            this.uploadRoomPhoto(result.photo, result.model.number);
-          }
-        }, err => {
-          this.snack.open('Error while saving!', 'Error', {
-            duration: 2000
-          });
-        });
-      }
-    });
+    this.router.navigate(['admin', 'add-room', {hotelId: this.selection.selected[0]._id}]);
   }
 
   editRoom() {
@@ -194,30 +169,7 @@ export class AdminNavigationComponent implements OnInit {
       this.snack.open('Please, select a room to edit first!', 'Warning', { duration: 2000 });
       return;
     }
-    const dialogRef = this.dialog.open(AddRoomModalComponent, {
-      width: '500px', panelClass: 'ghost-dialog-white',
-      data: { model: this.rSelection.selected[0] }
-    });
-    dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
-      if (!!result && !!result.model) {
-        this.selection.selected[0].rooms.forEach(r => {
-          if (r._id === result.model._id) {
-            r = result.model;
-            return;
-          }
-        });
-        this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
-          this.selection.selected[0].rooms.push(result.model);
-          this.snack.open('Save successful!', 'Update', {
-            duration: 2000
-          });
-        }, err => {
-          this.snack.open('Error while saving!', 'Error', {
-            duration: 2000
-          });
-        });
-      }
-    });
+    this.router.navigate(['admin', 'edit-room', this.rSelection.selected[0]._id, { hotelId: this.selection.selected[0]._id }]);
   }
 
   deleteRoom() {
@@ -242,18 +194,6 @@ export class AdminNavigationComponent implements OnInit {
       });
     });
     this.selection.clear();
-  }
-
-  uploadRoomPhoto(file: File, roomNumber: number): void {
-    this.hService.uploadRoomImage(file, roomNumber).subscribe(res => {
-      this.snack.open('Photo upload successful!', 'Update', {
-        duration: 2000
-      });
-    }, err => {
-      this.snack.open('Error while uploading photo!', 'Error', {
-        duration: 2000
-      });
-    });
   }
 
 }
