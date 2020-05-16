@@ -16,6 +16,7 @@ export class AddRoomModalComponent implements OnInit {
   hotels: HotelModel[];
   isNew = false;
   hotelId: string;
+  fileToUpload: File = null;
 
   constructor(
     public dialogRef: MatDialogRef<AddRoomModalComponent>,
@@ -74,8 +75,13 @@ export class AddRoomModalComponent implements OnInit {
     });
     this.updateModelWithForm();
     this.dialogRef.close({
-      model: this.model
+      model: this.model,
+      photo: this.fileToUpload
     });
+  }
+
+  uploadPhoto(files: FileList): void {
+    this.fileToUpload = files.item(0);
   }
 
 }

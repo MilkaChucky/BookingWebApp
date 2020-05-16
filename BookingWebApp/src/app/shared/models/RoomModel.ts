@@ -4,4 +4,5 @@ export interface RoomModel {
     beds: number;
     price: number;
     free: boolean; // TODO: törölni
+    images?: string;
 }

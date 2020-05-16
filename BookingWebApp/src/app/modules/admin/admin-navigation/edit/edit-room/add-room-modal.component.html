@@ -9,6 +9,10 @@
             <mat-label>Number of Beds</mat-label>
             <input matInput type='number' formControlName='beds' required />
         </mat-form-field>
+        <div>
+            <mat-label>Photo</mat-label>
+            <input type="file" class="upload-photo" (change)="uploadPhoto($event.target.files)" />
+        </div>
     </form>
 </div>
 <div mat-dialog-actions>

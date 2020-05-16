@@ -41,7 +41,7 @@ export class HotelService {
       );
   }
 
-  addHotels(dto: HotelModel): Observable<any> {
+  addHotels(dto: HotelModel): Observable<HotelModel> {
     const url = this.backendUrl + 'hotels';
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -54,7 +54,7 @@ export class HotelService {
       );
   }
 
-  updateHotel(dto: HotelModel): Observable<any> {
+  updateHotel(dto: HotelModel): Observable<HotelModel> {
     const url = this.backendUrl + 'hotels/' + dto._id;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -67,7 +67,7 @@ export class HotelService {
       );
   }
 
-  deleteHotel(id: string): Observable<any> {
+  deleteHotel(id: string): Observable<HotelModel> {
     const url = this.backendUrl + 'hotels/' + id;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -77,6 +77,34 @@ export class HotelService {
       .pipe(
         tap(_ => console.log(`[HotelService] Deleting hotel (id): + ${id}`)),
         catchError(this.handleError<HotelModel>('deleteHotel', {} as HotelModel))
+      );
+  }
+
+  uploadHotelImage(photo: File, id: string): Observable<boolean> {
+    const url = this.backendUrl + 'hotels/' + id + '/images';
+    const httpOptions = {
+      withCredentials: true
+    };
+    const formData: FormData = new FormData();
+    formData.append('file', photo, photo.name);
+    return this.http.post<boolean>(url, formData, httpOptions)
+      .pipe(
+        tap(_ => console.log(`[HotelService] Uploading photo for hotel: (hotel id, photo): + ${id} + ${photo}`)),
+        catchError(this.handleError<boolean>('uploadHotelImage', false))
+      );
+  }
+
+  uploadRoomImage(photo: File, roomNumber: number): Observable<boolean> {
+    const url = this.backendUrl + 'rooms/' + roomNumber + '/images';
+    const httpOptions = {
+      withCredentials: true
+    };
+    const formData: FormData = new FormData();
+    formData.append('file', photo, photo.name);
+    return this.http.post<boolean>(url, formData, httpOptions)
+      .pipe(
+        tap(_ => console.log(`[HotelService] Uploading photo for room: (roomNumber, photo): + ${roomNumber} + ${photo}`)),
+        catchError(this.handleError<boolean>('uploadRoomImage', false))
       );
   }
 

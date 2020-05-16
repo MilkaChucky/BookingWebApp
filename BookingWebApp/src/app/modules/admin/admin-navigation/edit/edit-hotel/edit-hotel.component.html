@@ -8,6 +8,10 @@
         <mat-label>Address</mat-label>
         <input matInput type='text' formControlName='address' required />
     </mat-form-field>
+    <div>
+        <mat-label>Photo</mat-label>
+        <input type="file" class="upload-photo" (change)="uploadPhoto($event.target.files)" />
+    </div>
 </form>
 <div class="form-toolbar">
     <button class='ghost-button-white' (click)="save()" cdkFocusInitial>Save</button>

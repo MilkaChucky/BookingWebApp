@@ -164,7 +164,7 @@ export class AdminNavigationComponent implements OnInit {
     const dialogRef = this.dialog.open(AddRoomModalComponent, {
       width: '500px', panelClass: 'ghost-dialog-white', data: { }
     });
-    dialogRef.afterClosed().subscribe((result: { model: RoomModel }) => {
+    dialogRef.afterClosed().subscribe((result: { model: RoomModel, photo?: File }) => {
       console.log(result);
       if (!!result && !!result.model) {
         this.selection.selected[0].rooms.push(result.model);
@@ -177,6 +177,9 @@ export class AdminNavigationComponent implements OnInit {
           this.snack.open('Save successful!', 'Update', {
             duration: 2000
           });
+          if (!!result.photo) {
+            this.uploadRoomPhoto(result.photo, result.model.number);
+          }
         }, err => {
           this.snack.open('Error while saving!', 'Error', {
             duration: 2000
@@ -240,4 +243,17 @@ export class AdminNavigationComponent implements OnInit {
     });
     this.selection.clear();
   }
+
+  uploadRoomPhoto(file: File, roomNumber: number): void {
+    this.hService.uploadRoomImage(file, roomNumber).subscribe(res => {
+      this.snack.open('Photo upload successful!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snack.open('Error while uploading photo!', 'Error', {
+        duration: 2000
+      });
+    });
+  }
+
 }

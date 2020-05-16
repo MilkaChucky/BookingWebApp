@@ -15,6 +15,7 @@ export class EditHotelComponent implements OnInit {
   model: HotelModel;
   isPageInitialized = false;
   isNew = false;
+  fileToUpload: File = null;
 
   constructor(
     private hService: HotelService,
@@ -83,6 +84,9 @@ export class EditHotelComponent implements OnInit {
         this.snackBar.open('Saving successful!', 'Update', {
           duration: 2000
         });
+        if (!!this.fileToUpload) {
+          this.savePhoto(this.fileToUpload, res._id);
+        }
         this.router.navigate(['admin']);
       }, err => {
         this.snackBar.open('Error while saving!', 'Error', {
@@ -94,6 +98,9 @@ export class EditHotelComponent implements OnInit {
         this.snackBar.open('Saving successful!', 'Update', {
           duration: 2000
         });
+        if (!!this.fileToUpload) {
+          this.savePhoto(this.fileToUpload, res._id);
+        }
         this.router.navigate(['admin']);
       }, err => {
         this.snackBar.open('Error while saving!', 'Error', {
@@ -103,9 +110,25 @@ export class EditHotelComponent implements OnInit {
     }
   }
 
+  savePhoto(file: File, id: string): void {
+    this.hService.uploadHotelImage(file, id).subscribe(res => {
+      this.snackBar.open('Photo upload successful!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snackBar.open('Error while uploading photo!', 'Error', {
+        duration: 2000
+      });
+    });
+  }
+
   cancel() {
     this.hotelForm.reset();
     this.router.navigate(['admin']);
+  }
+
+  uploadPhoto(files: FileList): void {
+    this.fileToUpload = files.item(0);
   }
 
 }
