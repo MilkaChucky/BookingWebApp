@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 const { requireLogin } = require('../middlewares/auth.middlewares');
+const { Types: { ObjectId } } = require('mongoose');
 const User = require('../models/user.model');
 
 router.route('/login')
@@ -64,40 +65,29 @@ router.route('/register')
 router.route('/profile')
     .get(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const user = await User.findById(req.user._id).exec();
 
                 res.status(200).json(user);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         }
     )
     .put(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const updated = await User.findByIdAndUpdate(req.user._id, {
                     ...req.body,
-                    _id: req.user._id,
+                    _id: ObjectId(req.user._id),
                     role: req.user.role
                 }, { runValidators: true, new: true }).exec();
 
                 res.status(200).json(updated);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         }
     );

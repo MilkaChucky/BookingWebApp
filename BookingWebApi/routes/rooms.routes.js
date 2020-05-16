@@ -10,7 +10,7 @@ const roomImagesPath = path.normalize(`${imageFolderPath}/rooms`);
 
 router.route('/')
     .get(
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const rooms = await Hotel.aggregate([
                     { $match: { _id: ObjectId(req.params.hotelId) } },
@@ -20,12 +20,12 @@ router.route('/')
 
                 return res.status(200).json(rooms);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         })
     .post(
         allowForRole('admin'),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const hotel = await Hotel.findById(req.params.hotelId).exec();
                 hotel.rooms.push(req.body);
@@ -34,24 +34,13 @@ router.route('/')
 
                 return res.status(200).json(savedRoom);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         });
 
 router.route('/:roomNumber')
     .get(
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const [room] = await Hotel.aggregate([
                     { $match: { _id: ObjectId(req.params.hotelId) } },
@@ -63,12 +52,12 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(room);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         })
     .put(
         allowForRole('admin'),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const hotel = await Hotel.findById(req.params.hotelId).exec();
                 const i = hotel.rooms.findIndex(room => room.number === parseInt(req.params.roomNumber));
@@ -77,23 +66,12 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(hotel.rooms[i]);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         })
     .delete(
         allowForRole('admin'),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const hotel = await Hotel.findById(req.params.hotelId).exec();
                 const i = hotel.rooms.findIndex(room => room.number === parseInt(req.params.roomNumber));
@@ -102,7 +80,7 @@ router.route('/:roomNumber')
 
                 return res.status(200).json(room);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         });
 
@@ -110,7 +88,7 @@ router.route('/:roomNumber/images')
     .post(
         allowForRole('admin'),
         saveFiles(roomImagesPath),
-        async (req, res) => {
+        async (req, res, next) => {
             if (!req.uploadResult) {
                 return res.status(400).json({ message: 'No images have been uploaded!' });
             }
@@ -125,24 +103,13 @@ router.route('/:roomNumber/images')
 
                 return res.status(200).json(req.uploadResult);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         })
     .delete(
         allowForRole('admin'),
         deleteFiles(roomImagesPath),
-        async (req, res) => {
+        async (req, res, next) => {
             if (!req.deleteResult) {
                 return res.status(400).json({ message: 'No images have been deleted!' });
             }
@@ -157,18 +124,7 @@ router.route('/:roomNumber/images')
 
                 return res.status(200).json(req.deleteResult);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         });
 
