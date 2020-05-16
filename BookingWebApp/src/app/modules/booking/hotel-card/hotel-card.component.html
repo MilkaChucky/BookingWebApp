@@ -3,7 +3,7 @@
         <mat-card-title>{{hotel.name}}</mat-card-title>
         <mat-card-subtitle>Address: {{hotel.address}}</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="{{hotel.images}}" alt="Photo of Hotel">
+    <img mat-card-image src="{{imagesHotelsUrl + hotel.images[0]}}" alt="Photo of Hotel">
     <mat-card-content>
         <mat-slider max="5" min="0" step="1" thumbLabel="true" [(ngModel)]="booking.rating">
             </mat-slider>

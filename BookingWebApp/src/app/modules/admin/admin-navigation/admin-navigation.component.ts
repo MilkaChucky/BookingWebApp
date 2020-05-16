@@ -9,6 +9,7 @@ import { EditHotelComponent } from './edit/edit-hotel/edit-hotel.component';
 import { EditRoomComponent } from './edit/edit-room/edit-room.component';
 import { RoomService } from 'src/app/core/services/room.service';
 import { BookingService } from 'src/app/core/services/booking.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -19,8 +20,8 @@ export class AdminNavigationComponent implements OnInit {
   @ViewChild('MasterPaginator', { static: true }) masterPaginator: MatPaginator;
   @ViewChild('DetailsPaginator', { static: true }) detailsPaginator: MatPaginator;
 
-  displayedColumns: string[] = ['_id', 'name', 'address'];
-  displayedColumnsRooms: string[] = ['_id', 'number', 'beds', 'price', 'free'];
+  displayedColumns: string[] = ['_id', 'name', 'address', 'image'];
+  displayedColumnsRooms: string[] = ['_id', 'number', 'beds', 'price', 'image', 'free'];
   dataSource: MatTableDataSource<HotelModel>;
   selection: SelectionModel<HotelModel>;
   dataSourceRooms: MatTableDataSource<RoomModel>;
@@ -28,6 +29,9 @@ export class AdminNavigationComponent implements OnInit {
 
   hotels: HotelModel[];
   rooms: RoomModel[];
+
+  readonly imagesRoomsUrl = environment.imagesRoomsUrl;
+  readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
     private bService: BookingService,

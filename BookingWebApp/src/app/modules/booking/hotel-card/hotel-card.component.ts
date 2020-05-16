@@ -4,6 +4,7 @@ import { HotelService } from 'src/app/core/services/hotel.service';
 import { MatSlider, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { BookingModel } from 'src/app/shared/models/BookingModel';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-hotel-card',
@@ -14,6 +15,7 @@ export class HotelCardComponent implements OnInit {
   @ViewChild(MatSlider , {static: false}) slider: MatSlider;
   @Input() hotel: HotelModel;
   booking: BookingModel;
+  readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
     private hService: HotelService,

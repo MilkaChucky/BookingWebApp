@@ -4,6 +4,6 @@ export interface HotelModel {
     _id: string;
     name: string;
     address: string;
-    images?: string;
+    images?: string[];
     rooms: RoomModel[];
 }
