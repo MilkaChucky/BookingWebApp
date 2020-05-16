@@ -5,6 +5,8 @@ import { RoomModel } from 'src/app/shared/models/RoomModel';
 import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
+import { RoomService } from 'src/app/core/services/room.service';
+import { BookingService } from 'src/app/core/services/booking.service';
 
 @Component({
   selector: 'app-room-navigation',
@@ -22,7 +24,8 @@ export class RoomNavigationComponent implements OnInit {
   hotels: HotelModel[];
 
   constructor(
-    private hService: HotelService,
+    private rService: RoomService,
+    private bService: BookingService,
     private route: ActivatedRoute,
     private router: Router,
     private snack: MatSnackBar
@@ -30,7 +33,7 @@ export class RoomNavigationComponent implements OnInit {
 
   async ngOnInit() {
     const id = this.route.snapshot.params.id;
-    this.hService.getRooms(id).subscribe((res: RoomModel[]) => {
+    this.rService.getRooms(id).subscribe((res: RoomModel[]) => {
       this.rooms = res;
       this.dataSource = new MatTableDataSource<RoomModel>(this.rooms);
 
@@ -67,7 +70,7 @@ export class RoomNavigationComponent implements OnInit {
     this.selection.selected.forEach(r => {
       idList.push(r._id);
     });
-    this.hService.bookRooms(idList).subscribe(res => {
+    this.bService.bookRooms(idList).subscribe(res => {
       if (!!res) {
         this.snack.open('Saved successfully!', 'Update', {
           duration: 2000

@@ -2,9 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { RoomModel } from 'src/app/shared/models/RoomModel';
-import { HotelService } from 'src/app/core/services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { RoomService } from 'src/app/core/services/room.service';
+import { ImageService } from 'src/app/core/services/image.service';
 
 @Component({
   selector: 'app-add-room-modal',
@@ -24,22 +25,13 @@ export class EditRoomComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    private hService: HotelService
+    private rService: RoomService,
+    private iService: ImageService
   ) {}
 
   ngOnInit() {
     this.isNew = this.route.snapshot.params.id === undefined;
     this.hotelId = this.route.snapshot.params.hotelId;
-
-    this.hService.getHotels().subscribe(res => {
-      if (!!res) {
-        this.hotels = res;
-      } else {
-        this.snackBar.open('Hotels are not available for selection!', 'Error', {
-          duration: 2000
-        });
-      }
-    });
 
     if (!!this.model) {
       this.roomForm = new FormGroup({
@@ -83,7 +75,7 @@ export class EditRoomComponent implements OnInit {
     });
     this.updateModelWithForm();
     if (this.isNew) {
-      this.hService.addRoom(this.model, this.hotelId).subscribe(res => {
+      this.rService.addRoom(this.model, this.hotelId).subscribe(res => {
         this.snackBar.open('Save successful!', 'Update', {
           duration: 2000
         });
@@ -97,7 +89,7 @@ export class EditRoomComponent implements OnInit {
         });
       });
     } else {
-      this.hService.updateRoom(this.model, this.hotelId).subscribe(res => {
+      this.rService.updateRoom(this.model, this.hotelId).subscribe(res => {
         this.snackBar.open('Save successful!', 'Update', {
           duration: 2000
         });
@@ -118,7 +110,7 @@ export class EditRoomComponent implements OnInit {
   }
 
   uploadRoomPhoto(file: File, roomNumber: number): void {
-    this.hService.uploadRoomImage(file, roomNumber).subscribe(res => {
+    this.iService.uploadRoomImage(file, roomNumber).subscribe(res => {
       this.snackBar.open('Photo upload successful!', 'Update', {
         duration: 2000
       });

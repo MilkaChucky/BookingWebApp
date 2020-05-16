@@ -7,6 +7,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { EditHotelComponent } from './edit/edit-hotel/edit-hotel.component';
 import { EditRoomComponent } from './edit/edit-room/edit-room.component';
+import { RoomService } from 'src/app/core/services/room.service';
+import { BookingService } from 'src/app/core/services/booking.service';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -28,6 +30,7 @@ export class AdminNavigationComponent implements OnInit {
   rooms: RoomModel[];
 
   constructor(
+    private bService: BookingService,
     private hService: HotelService,
     private route: ActivatedRoute,
     private router: Router,
@@ -109,7 +112,7 @@ export class AdminNavigationComponent implements OnInit {
     this.selection.selected.forEach(r => {
       idList.push(r._id);
     });
-    this.hService.bookRooms(idList).subscribe(res => {
+    this.bService.bookRooms(idList).subscribe(res => {
       if (!!res) {
         this.snack.open('Saved successfully!', 'Update', {
           duration: 2000

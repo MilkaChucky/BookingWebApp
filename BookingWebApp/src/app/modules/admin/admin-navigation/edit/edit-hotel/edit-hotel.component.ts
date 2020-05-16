@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { HotelService } from 'src/app/core/services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ImageService } from 'src/app/core/services/image.service';
 
 @Component({
   selector: 'app-add-hotel-modal',
@@ -19,6 +20,7 @@ export class EditHotelComponent implements OnInit {
 
   constructor(
     private hService: HotelService,
+    private iService: ImageService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
@@ -111,7 +113,7 @@ export class EditHotelComponent implements OnInit {
   }
 
   uploadPhoto(file: File, id: string): void {
-    this.hService.uploadHotelImage(file, id).subscribe(res => {
+    this.iService.uploadHotelImage(file, id).subscribe(res => {
       this.snackBar.open('Photo upload successful!', 'Update', {
         duration: 2000
       });
