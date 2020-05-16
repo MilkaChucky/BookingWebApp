@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { requireLogin, allowForRole } = require('../middlewares/auth.middlewares');
 const { createTransport: createMailTransport } = require('nodemailer');
 const { email } = require('../config');
-const { Types:{ ObjectId } } = require('mongoose');
+const { Types: { ObjectId } } = require('mongoose');
 const Booking = require('../models/booking.model');
 const Hotel = require('../models/hotel.model');
 
@@ -45,7 +45,7 @@ router.route('/')
                                     user: req.user._id
                                 }),
                             ...(req.query.hotel && {
-                                hotel: ObjectId(req.query.hotel)   
+                                hotel: ObjectId(req.query.hotel)
                             }),
                             ...(bookingIds && {
                                 'bookedRooms._id': { $in: bookingIds }
@@ -89,97 +89,6 @@ router.route('/')
                 return res.status(200).json(bookings);
             } catch (error) {
                 return res.status(500).json({ error: error });
-            }
-        })
-    .post(
-        requireLogin(),
-        async (req, res) => {
-            try {
-                if (!req.body.hotel) {
-                    return res.status(400).json({ message: 'Hotel ID must be provided!' });
-                }
-
-                if (!req.body.bookedRooms || req.body.bookedRooms.length === 0) {
-                    return res.status(400).json({ message: 'At least one room has to be provided, that needs to be booked!' });
-                }
-
-                const booking = await Booking.findOneAndUpdate({
-                    user: req.user._id,
-                    hotel: req.body.hotel
-                }, {
-                    $setOnInsert: { user: req.user._id, hotel: req.body.hotel },
-                    $push: { bookedRooms: { $each: req.body.bookedRooms } }
-                }, { upsert: true, runValidators: true, context: 'query', new: true }).exec();
-
-                const hotel = await Hotel.findById(req.body.hotel).exec();
-
-                const result = booking.toJSON();
-                result.bookedRooms = result.bookedRooms
-                    .filter(bookedRoom => {
-                        return req.body.bookedRooms.some(br =>
-                            br.roomId === bookedRoom.roomId.toString() &&
-                            new Date(br.from).valueOf() === new Date(bookedRoom.from).valueOf() &&
-                            new Date(br.until).valueOf() === new Date(bookedRoom.until).valueOf());
-                    })
-                    .map(bookedRoom => {
-                        return {
-                            ...(hotel.rooms.find(room => room._id.toString() === bookedRoom.roomId.toString()).toJSON()),
-                            ...bookedRoom
-                        };
-                    });
-                delete result.user;
-
-                const bookedRoomsListElements = result.bookedRooms.map(bookedRoom => {
-                    const fromDate = bookedRoom.from.toLocaleDateString('hu');
-                    const untilDate = bookedRoom.until.toLocaleDateString('hu');
-                    const bookingId = bookedRoom._id.toString();
-                    return `
-                        <li style="font-size:1.5em">
-                            <div><b>Room ${bookedRoom.number}</b> from ${fromDate} until ${untilDate}</div>
-                            <div>| Booking ID: <strong>${bookingId}</strong></div>
-                        </li>
-                    `;
-                });
-
-                transporter.sendMail({
-                    to: req.user.email,
-                    html: `
-                        <html>
-                            <body>
-                                <main>
-                                    <h1>You successfully booked the following rooms at ${hotel.name}:</h1>
-                                    <p>
-                                        <ul>
-                                            ${bookedRoomsListElements.join('\n')}
-                                        </ul>
-                                </main> 
-                                <footer style="font-size:1.2em">
-                                Thank you for choosing us!<br>
-                                Griff&Ale Booking
-                                </footer>
-                            </body>
-                        </html>
-                    `
-                }, (error, info) => {
-                    if (error) {
-                        console.warn(`Email was not sent! Reason:\n${error}`);
-                    }
-                });
-
-                return res.status(200).json(result);
-            } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
             }
         })
     .delete(
@@ -280,6 +189,174 @@ router.route('/:bookingId')
                 return res.status(200).json(result);
             } catch (error) {
                 return res.status(500).json({ error: error });
+            }
+        });
+
+router.route('/hotel/:hotelId')
+    .post(
+        requireLogin(),
+        async (req, res) => {
+            try {
+                if (!req.body.rooms || !req.body.rooms.length) {
+                    return res.status(400).json({ message: 'At least one room has to be provided, that needs to be booked!' });
+                }
+
+                const booking = await Booking.findOneAndUpdate({
+                    user: req.user._id,
+                    hotel: ObjectId(req.params.hotelId)
+                }, {
+                    $setOnInsert: { user: req.user._id, hotel: req.params.hotelId },
+                    $push: { bookedRooms: { $each: req.body.rooms } }
+                }, { upsert: true, runValidators: true, context: 'query', new: true }).exec();
+
+                const hotel = await Hotel.findById(req.params.hotelId).exec();
+
+                const result = booking.toJSON();
+                result.bookedRooms = result.bookedRooms
+                    .filter(bookedRoom => {
+                        return req.body.rooms.some(br =>
+                            br.roomId === bookedRoom.roomId.toString() &&
+                            new Date(br.from).valueOf() === new Date(bookedRoom.from).valueOf() &&
+                            new Date(br.until).valueOf() === new Date(bookedRoom.until).valueOf());
+                    })
+                    .map(bookedRoom => {
+                        return {
+                            ...(hotel.rooms.find(room => room._id.toString() === bookedRoom.roomId.toString()).toJSON()),
+                            ...bookedRoom
+                        };
+                    });
+                delete result.user;
+
+                const bookedRoomsListElements = result.bookedRooms.map(bookedRoom => {
+                    const fromDate = bookedRoom.from.toLocaleDateString('hu');
+                    const untilDate = bookedRoom.until.toLocaleDateString('hu');
+                    const bookingId = bookedRoom._id.toString();
+                    return `
+                    <li style="font-size:1.5em">
+                        <div><b>Room ${bookedRoom.number}</b> from ${fromDate} until ${untilDate}</div>
+                        <div>| Booking ID: <strong>${bookingId}</strong></div>
+                    </li>
+                `;
+                });
+
+                transporter.sendMail({
+                    to: req.user.email,
+                    html: `
+                    <html>
+                        <body>
+                            <main>
+                                <h1>You successfully booked the following rooms at ${hotel.name}:</h1>
+                                <p>
+                                    <ul>
+                                        ${bookedRoomsListElements.join('\n')}
+                                    </ul>
+                            </main> 
+                            <footer style="font-size:1.2em">
+                            Thank you for choosing us!<br>
+                            Griff&Ale Booking
+                            </footer>
+                        </body>
+                    </html>
+                `
+                }, (error, info) => {
+                    if (error) {
+                        console.warn(`Email was not sent! Reason:\n${error}`);
+                    }
+                });
+
+                return res.status(200).json(result);
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
+            }
+        });
+
+router.route('/hotel/:hotelId/rate')
+    .post(
+        requireLogin(),
+        async (req, res) => {
+            try {
+                if (!req.body || (req.body.rating === undefined && req.body.opinion === undefined)) {
+                    return res.status(400).json({ message: 'You have to provide at least the rating or the comment!' });
+                }
+
+                const booking = await Booking.findOne({
+                    user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
+                    hotel: ObjectId(req.params.hotelId),
+                    'bookedRooms.until': { $lt: new Date() }
+                }).exec();
+
+                if (!booking) {
+                    return res.status(404).json({ message: 'You cannot rate a hotel until you spent time there!' });
+                }
+
+                if (req.body.rating !== undefined) {
+                    booking.rating = req.body.rating;
+                }
+                if (req.body.opinion !== undefined) {
+                    booking.opinion = req.body.opinion;
+                }
+
+                await booking.save();
+
+                return res.status(200).json({});
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
+            }
+        })
+    .delete(
+        requireLogin(),
+        async (req, res) => {
+            try {
+                const booking = await Booking.findOne({
+                    user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
+                    hotel: ObjectId(req.params.hotelId)
+                }).exec();
+
+                if (!booking) {
+                    return res.status(404).json({ message: 'You have not booked a room in this hotel yet!' });
+                }
+
+                booking.rating = undefined;
+                booking.opinion = undefined;
+
+                await booking.save();
+
+                return res.status(200).json({});
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
             }
         });
 

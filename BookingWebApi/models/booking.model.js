@@ -41,6 +41,15 @@ const schema = new Schema({
         ref: 'hotel',
         required: [true, 'The hotel ID must me provided!']
     },
+    rating: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0
+    },
+    opinion: {
+        type: String
+    },
     bookedRooms: {
         type: [bookedRoomSchema],
         validate: [
