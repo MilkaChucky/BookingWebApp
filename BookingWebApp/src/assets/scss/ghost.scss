@@ -67,3 +67,86 @@
         }
     }
 }
+
+.ghost-headline-white {
+    margin-left: 1%;
+    color: white;
+    font: small-caps;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+// Without dialog
+.ghost-form-white {
+    background-color: rgb(0, 0, 0, 0.5);
+    border: white solid 1px;
+    border-radius: 0px;
+    color: white;
+    padding: 25px;
+    margin-left: 1%;
+    mat-form-field.mat-form-field {
+        &.mat-focused {
+        .mat-form-field-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .mat-form-field-ripple {
+            background-color: white !important;
+        }
+        }
+        .mat-form-field-label,.mat-form-field-label.mat-focused,
+        .mat-form-field.mat-focused.matform-field-should-float {
+            color: white;
+        }
+        .mat-form-field-underline, .mat-form-field-underline.mat-focused {
+            background-color: white;
+        }
+    }
+    mat-form-field {
+        color: white;
+        mat-label, label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        mat-input, input {
+            color: white;
+        }
+        mat-datepicker-toggle {
+            color: white !important;
+        }
+    }
+}
+
+.ghost-bookingform-white {
+    background-color: rgb(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    mat-form-field.mat-form-field {
+        &.mat-focused {
+        .mat-form-field-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .mat-form-field-ripple {
+            background-color: white !important;
+        }
+        }
+        .mat-form-field-label,.mat-form-field-label.mat-focused,
+        .mat-form-field.mat-focused.matform-field-should-float {
+            color: white;
+        }
+        .mat-form-field-underline, .mat-form-field-underline.mat-focused {
+            background-color: white;
+        }
+    }
+    mat-form-field {
+        margin-left: 25px;
+        color: white;
+        mat-label, label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        mat-input, input {
+            color: white;
+        }
+        mat-datepicker-toggle {
+            color: white !important;
+        }
+    }
+}

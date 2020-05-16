@@ -3,6 +3,8 @@ import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { HotelService } from 'src/app/core/services/hotel.service';
 import { MatSlider, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { BookingModel } from 'src/app/shared/models/BookingModel';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-hotel-card',
@@ -12,6 +14,8 @@ import { Router } from '@angular/router';
 export class HotelCardComponent implements OnInit {
   @ViewChild(MatSlider , {static: false}) slider: MatSlider;
   @Input() hotel: HotelModel;
+  booking: BookingModel;
+  readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
     private hService: HotelService,
@@ -20,28 +24,11 @@ export class HotelCardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.booking = {} as BookingModel;
   }
 
   goToRoomNavigation(): void {
-    this.router.navigate(['booking', this.hotel.id, 'rooms']);
-  }
-
-  updateScore(): void {
-    if (!!this.slider) {
-      this.hService.updateHotelScore(this.hotel.id, this.slider.value).subscribe( res => {
-        if (res > -1) {
-          this.snack.open('Score saved successfully!', 'Update', {
-            duration: 2000,
-            politeness: 'polite'
-          });
-        }
-      });
-    } else {
-      this.snack.open('Error while saving score. Try again later!', 'Error', {
-        duration: 2000,
-        politeness: 'assertive'
-      });
-    }
+    this.router.navigate(['hotels', this.hotel._id, 'rooms']);
   }
 
 }

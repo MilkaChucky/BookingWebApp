@@ -4,6 +4,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { HotelNavigationComponent } from './hotel-navigation/hotel-navigation.component';
 import { RoomNavigationComponent } from './room-navigation/room-navigation.component';
 import { HotelCardComponent } from './hotel-card/hotel-card.component';
+import { BookingNavigationComponent } from './booking-navigation/booking-navigation.component';
 
 
 
@@ -11,14 +12,16 @@ import { HotelCardComponent } from './hotel-card/hotel-card.component';
   declarations: [
     HotelNavigationComponent,
     HotelCardComponent,
-    RoomNavigationComponent
+    RoomNavigationComponent,
+    BookingNavigationComponent
   ],
   imports: [
     CommonModule,
     SharedModule
   ],
   exports: [
-    HotelNavigationComponent
+    HotelNavigationComponent,
+    BookingNavigationComponent
   ]
 })
 export class BookingModule { }

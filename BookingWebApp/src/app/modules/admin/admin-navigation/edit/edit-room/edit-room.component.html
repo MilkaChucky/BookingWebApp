@@ -1,0 +1,23 @@
+<h1 class="ghost-headline-white">{{this.isNew ? 'Add' : 'Edit'}} Hotel</h1>
+<form *ngIf='isPageInitialized' class="ghost-form-white" [formGroup]='roomForm'>
+    <mat-form-field>
+        <mat-label>RoomNumber</mat-label>
+        <input matInput type='number' formControlName='number' required />
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Number of Beds</mat-label>
+        <input matInput type='number' formControlName='beds' required />
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Price</mat-label>
+        <input matInput type='number' formControlName='price' required />
+    </mat-form-field>
+    <div>
+        <mat-label>Photo</mat-label>
+        <input type="file" class="upload-photo" (change)="getPhotoFile($event.target.files)" />
+    </div>
+</form>
+<div class="form-toolbar">
+    <button class='ghost-button-white' (click)="save()" cdkFocusInitial>Save</button>
+    <button class='ghost-button-white' (click)="cancel()">Cancel</button>
+</div>

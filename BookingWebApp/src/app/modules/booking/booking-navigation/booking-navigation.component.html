@@ -1,0 +1,50 @@
+<h1 class="ghost-headline-white">Cancel & Overview Bookings</h1>
+
+<div class="toolbar">
+    <mat-icon matTooltip='delete selected booking(s)' (click)='deleteHotelBooking()' class="ghost-mat-icon-white">delete
+    </mat-icon>
+</div>
+
+<div class="mat-elevation-z8 table-wrapper">
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="hotel">
+            <th mat-header-cell *matHeaderCellDef> Hotel </th>
+            <td mat-cell *matCellDef="let element"> {{element.hotel}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)='selectRow(row)'
+            [class.selected]='selection.isSelected(row)'>
+        </tr>
+    </table>
+
+    <mat-paginator #MasterPaginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+</div>
+
+<div class="toolbar">
+    <mat-icon matTooltip='delete selected booking(s)' (click)='deleteRoomBooking()' class="ghost-mat-icon-white">delete</mat-icon>
+</div>
+
+<div class="mat-elevation-z8 table-wrapper">
+    <table mat-table [dataSource]="dataSourceRooms">
+        <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef> Room Number </th>
+            <td mat-cell *matCellDef="let element"> {{element.room.number}} </td>
+        </ng-container>
+        <ng-container matColumnDef="from">
+            <th mat-header-cell *matHeaderCellDef> From </th>
+            <td mat-cell *matCellDef="let element"> {{element.from}} </td>
+        </ng-container>
+        <ng-container matColumnDef="to">
+            <th mat-header-cell *matHeaderCellDef> To </th>
+            <td mat-cell *matCellDef="let element"> {{element.until}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsRooms"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsRooms;" (click)='selectRoomRow(row)'
+            [class.selected]='isRoomSelected(row)'>
+        </tr>
+    </table>
+
+    <mat-paginator #DetailsPaginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+</div>

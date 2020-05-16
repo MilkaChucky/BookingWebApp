@@ -13,6 +13,19 @@ html {
     }
 }
 
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+}
+
 .spacer {
   flex: 1 1 auto;
+}
+
+.form-toolbar {
+    position: relative;
+    margin-left: 1%;
+    margin-top: 1%;
 }
