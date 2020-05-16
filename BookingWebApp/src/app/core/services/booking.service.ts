@@ -64,15 +64,15 @@ export class BookingService {
       );
   }
 
-  deleteBookingsForUser(hotelId: string, userId: string): Observable<boolean> {
-    const url = this.backendUrl + `bookings/${hotelId}/${userId}`;
+  deleteBooking(bookingId: string): Observable<boolean> {
+    const url = this.backendUrl + `bookings/${bookingId}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[BookingService] Deleting bookings for user, hotel (id): + ${userId} + ${hotelId}`)),
+        tap(_ => console.log(`[BookingService] Deleting booking: + ${bookingId}`)),
         catchError(this.handleError<boolean>(false))
       );
   }

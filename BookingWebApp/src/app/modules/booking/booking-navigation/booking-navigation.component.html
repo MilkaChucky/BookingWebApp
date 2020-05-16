@@ -1,15 +1,15 @@
 <h1 class="ghost-headline-white">Cancel & Overview Bookings</h1>
 
-<div class="toolbar">
-    <mat-icon matTooltip='delete selected booking(s)' (click)='deleteHotelBooking()' class="ghost-mat-icon-white">delete
-    </mat-icon>
-</div>
-
 <div class="mat-elevation-z8 table-wrapper">
     <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="hotel">
-            <th mat-header-cell *matHeaderCellDef> Hotel </th>
-            <td mat-cell *matCellDef="let element"> {{element.hotel}} </td>
+        <ng-container matColumnDef="hotelname">
+            <th mat-header-cell *matHeaderCellDef> Hotel Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.hotel[0].name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="hoteladdress">
+            <th mat-header-cell *matHeaderCellDef> Hotel Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.hotel[0].address}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -19,10 +19,6 @@
     </table>
 
     <mat-paginator #MasterPaginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
-</div>
-
-<div class="toolbar">
-    <mat-icon matTooltip='delete selected booking(s)' (click)='deleteRoomBooking()' class="ghost-mat-icon-white">delete</mat-icon>
 </div>
 
 <div class="mat-elevation-z8 table-wrapper">
@@ -39,11 +35,15 @@
             <th mat-header-cell *matHeaderCellDef> To </th>
             <td mat-cell *matCellDef="let element"> {{element.until}} </td>
         </ng-container>
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> To </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-icon matTooltip='delete selected booking(s)' (click)='deleteBooking(element._id)'>delete</mat-icon>
+            </td>
+        </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumnsRooms"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsRooms;" (click)='selectRoomRow(row)'
-            [class.selected]='isRoomSelected(row)'>
-        </tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsRooms;"></tr>
     </table>
 
     <mat-paginator #DetailsPaginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
