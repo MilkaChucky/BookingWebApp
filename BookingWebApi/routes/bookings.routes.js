@@ -53,8 +53,18 @@ router.route('/')
                         }
                     },
                     {
+                        $lookup: {
+                            from: 'hotels',
+                            localField: 'hotel',
+                            foreignField: '_id',
+                            as: 'hotel'
+                        }
+                    },
+                    {
                         $project: {
-                            hotel: true,
+                            'hotel._id': true,
+                            'hotel.name': true,
+                            'hotel.address': true,
                             bookedRooms: bookingIds ?
                                 {
                                     $filter: {
@@ -66,7 +76,15 @@ router.route('/')
                                     }
                                 } : true
                         }
-                    }
+                    },
+                    // {
+                    //     $lookup: {
+                    //         from: 'hotels',
+                    //         localField: 'bookedRooms.roomId',
+                    //         foreignField: 'rooms._id',
+                    //         as: 'bookedRooms.room'
+                    //     }
+                    // }
                 ]);
 
                 const bookedRoomIds = bookings.reduce((result, current) => {
@@ -192,6 +210,39 @@ router.route('/:bookingId')
             }
         });
 
+router.route('/room/:roomId')
+    .get(
+        async (req, res) => {
+            try {
+                const intervals = await Booking.aggregate([
+                    { $unwind: { path: '$bookedRooms' } },
+                    { $replaceRoot: { newRoot: '$bookedRooms' } },
+                    {
+                        $match: {
+                            roomId: ObjectId(req.params.roomId),
+                            from: { $gte: new Date() }
+                        }
+                    },
+                    { $project: { _id: 0, from: 1, until: 1 } }
+                ]);
+
+                return res.status(200).json(intervals);
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
+            }
+        });
+
 router.route('/hotel/:hotelId')
     .post(
         requireLogin(),
@@ -291,7 +342,6 @@ router.route('/hotel/:hotelId/rating')
                 }, {
                     _id: 0, rating: 1, opinion: 1
                 }).exec();
-
 
                 return res.status(200).json({
                     average: ratings.reduce((p, c) => p + c.rating, 0) / ratings.length,
