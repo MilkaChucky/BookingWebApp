@@ -3,15 +3,16 @@ const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
-const { port, secret, mongodb } = require('./config');
+const { port, secret, mongodb, imageFolderPath } = require('./config');
 const { connect:ConnectToMongoDB } = require('mongoose');
 const User = require('./models/user.model');
 
 const app = express();
 
-ConnectToMongoDB(mongodb.buildUrl(), {
+ConnectToMongoDB(mongodb.url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
@@ -24,6 +25,7 @@ app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(fileUpload({ createParentPath: true }));
 
 passport.serializeUser((user, done) => {
     if (!user) return done("Log in properly!");
@@ -66,6 +68,7 @@ app.use(passport.session());
 app.use('/api/users', require('./routes/users.routes'));
 app.use('/api/hotels', require('./routes/hotels.routes'));
 app.use('/api/bookings', require('./routes/bookings.routes'));
+app.use('/api/files/images', express.static(imageFolderPath));
 
 app.listen(port, () => {
     console.log(`BookingWebApi is running on port ${port}`);

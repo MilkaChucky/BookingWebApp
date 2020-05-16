@@ -1,7 +1,8 @@
 {
     "scripts": {
         "postinstall": "(cd BookingWebApi && npm install); (cd BookingWebApp && npm install);",
-        "start": "npm start --prefix BookingWebApi && npm start --prefix BookingWebApp",
+        "build": "docker-compose build",
+        "start": "docker-compose up",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {

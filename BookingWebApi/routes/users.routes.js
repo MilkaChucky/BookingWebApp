@@ -9,16 +9,16 @@ router.route('/login')
             if (req.body.email && req.body.password) {
                 passport.authenticate('local', (error, user) => {
                     if (error) {
-                        return res.status(403).send(error);
+                        return res.status(403).json({ message: error });
                     } else {
                         req.login(user, (error) => {
-                            if (error) return res.status(500).send(error);
+                            if (error) return res.status(500).json({ error: error });
                             return res.status(200).json(user);
                         });
                     }
                 })(req, res);
             } else {
-                res.status(400).send('Missing email or password!');
+                res.status(400).json({ message: 'Missing email or password!' });
             }
         });
 
@@ -27,8 +27,7 @@ router.route('/logout')
         requireLogin('Log in, before you log out!'),
         (req, res) => {
             req.logout();
-            // Need to return empty JSON so Angular2+ won't treat code: 200 as error!
-            res.status(200).send("{}");
+            res.status(200).json({ });
         });
 
 router.route('/register')
@@ -44,14 +43,21 @@ router.route('/register')
                     const registeredUser = await user.save();
                     return res.status(200).json(registeredUser);
                 } catch (error) {
-                    if (error.name === 'ValidationError') {
-                        return res.status(400).send(error.message);
-                    } else {
-                        return res.status(500).send(error);
+                    switch (error.name) {
+                        case 'ValidationError':
+                            return res.status(400).json({ message: error.message });
+                        case 'CastError':
+                            let err = error;
+                            while (err.reason && err.reason.path) {
+                                err = err.reason;
+                            }
+                            return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                        default:
+                            return res.status(500).json({ error: error });
                     }
                 }
             } else {
-                return res.status(400).send('Email address or password is missing!');
+                return res.status(400).json({ message: 'Email address or password is missing!' });
             }
         });
 
@@ -64,7 +70,7 @@ router.route('/profile')
 
                 res.status(200).json(user);
             } catch (error) {
-                return res.status(500).send(error);
+                return res.status(500).json({ error: error });
             }
         }
     )
@@ -80,10 +86,17 @@ router.route('/profile')
 
                 res.status(200).json(updated);
             } catch (error) {
-                if (error.name === 'ValidationError') {
-                    return res.status(400).send(error.message);
-                } else {
-                    return res.status(500).send(error);
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
                 }
             }
         }
