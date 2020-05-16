@@ -7,6 +7,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { RoomService } from 'src/app/core/services/room.service';
 import { BookingService } from 'src/app/core/services/booking.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-room-navigation',
@@ -22,6 +24,10 @@ export class RoomNavigationComponent implements OnInit {
 
   rooms: RoomModel[];
   hotels: HotelModel[];
+
+  bookingForm: FormGroup;
+  isPageInitialized: boolean;
+  readonly imagesRoomsUrl = environment.imagesRoomsUrl;
 
   constructor(
     private rService: RoomService,
@@ -42,6 +48,17 @@ export class RoomNavigationComponent implements OnInit {
       this.selection = new SelectionModel<RoomModel>(allowMultiSelect, initialSelection);
 
       this.dataSource.paginator = this.paginator;
+
+      this.bookingForm = new FormGroup({
+        from: new FormControl('', [
+          Validators.required
+        ]),
+        to: new FormControl('', [
+          Validators.required
+        ])
+      });
+
+      this.isPageInitialized = true;
     });
   }
 

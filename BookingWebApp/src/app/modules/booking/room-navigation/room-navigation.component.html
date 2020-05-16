@@ -1,5 +1,21 @@
+<h1 class="ghost-headline-white">Booking Rooms</h1>
+
 <div class="toolbar">
-    <mat-icon matTooltip='booking selected room' (click)='bookRoom()' class="ghost-mat-icon-white">book</mat-icon>
+    <form *ngIf='isPageInitialized' class="ghost-bookingform-white" [formGroup]='bookingForm'>
+        <mat-form-field>
+            <mat-label>From</mat-label>
+            <input matInput formControlName='from' [matDatepicker]="picker1">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>To</mat-label>
+            <input matInput formControlName='to' [matDatepicker]="picker2">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+        <mat-icon matTooltip='booking selected room' (click)='bookRoom()' class="ghost-mat-icon-white">book</mat-icon>
+    </form>
 </div>
 
 <div class="mat-elevation-z8 table-wrapper">
@@ -27,7 +43,7 @@
         <ng-container matColumnDef="images">
             <th mat-header-cell *matHeaderCellDef> Picture </th>
             <td mat-cell *matCellDef="let element">
-                <img mat-card-image src="{{element.images}}" alt="Photo of Room">
+                <img mat-card-image src="{{imagesRoomsUrl + element.images[0]}}" alt="Photo of Room">
             </td>
         </ng-container>
 

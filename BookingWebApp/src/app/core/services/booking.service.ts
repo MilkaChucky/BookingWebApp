@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from './../../../environments/environment';
 import { of, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { BookingModel } from 'src/app/shared/models/BookingModel';
+import { BookingModel, AddBookingDto } from 'src/app/shared/models/BookingModel';
 
 @Injectable({
   providedIn: 'root'
@@ -38,16 +38,16 @@ export class BookingService {
       );
   }
 
-  addBooking(dto: BookingModel, hotelId: string): Observable<BookingModel> {
+  addBooking(dto: AddBookingDto, hotelId: string): Observable<AddBookingDto> {
     const url = this.backendUrl + `bookings/hotel/${hotelId}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
-    return this.http.post<BookingModel>(url, JSON.stringify(dto), httpOptions)
+    return this.http.post<AddBookingDto>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Adding booking: + ${dto}`)),
-        catchError(this.handleError<BookingModel>({} as BookingModel))
+        catchError(this.handleError<AddBookingDto>({} as AddBookingDto))
       );
   }
 
