@@ -18,6 +18,8 @@ services:
     image: booking-web-api
     depends_on:
       - mongodb
+    environment:
+      - BOOKING_WEB_API_ENV=docker
     ports:
         - "3000:3000"
     deploy:

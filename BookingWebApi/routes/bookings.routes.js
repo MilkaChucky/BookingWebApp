@@ -96,11 +96,11 @@ router.route('/')
         async (req, res) => {
             try {
                 if (!req.body.hotel) {
-                    return res.status(400).send('Hotel ID must be provided!');
+                    return res.status(400).json({ message: 'Hotel ID must be provided!' });
                 }
 
                 if (!req.body.bookedRooms || req.body.bookedRooms.length === 0) {
-                    return res.status(400).send('At least one room has to be provided, that needs to be booked!');
+                    return res.status(400).json({ message: 'At least one room has to be provided, that needs to be booked!' });
                 }
 
                 const booking = await Booking.findOneAndUpdate({
