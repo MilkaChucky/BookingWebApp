@@ -281,7 +281,37 @@ router.route('/hotel/:hotelId')
             }
         });
 
-router.route('/hotel/:hotelId/rate')
+router.route('/hotel/:hotelId/rating')
+    .get(
+        async (req, res) => {
+            try {
+                const ratings = await Booking.find({
+                    hotel: ObjectId(req.params.hotelId),
+                    rating: { $gte: 1 }
+                }, {
+                    _id: 0, rating: 1, opinion: 1
+                }).exec();
+
+
+                return res.status(200).json({
+                    average: ratings.reduce((p, c) => p + c.rating, 0) / ratings.length,
+                    ratings: ratings
+                });
+            } catch (error) {
+                switch (error.name) {
+                    case 'ValidationError':
+                        return res.status(400).json({ message: error.message });
+                    case 'CastError':
+                        let err = error;
+                        while (err.reason && err.reason.path) {
+                            err = err.reason;
+                        }
+                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
+                    default:
+                        return res.status(500).json({ error: error });
+                }
+            }
+        })
     .post(
         requireLogin(),
         async (req, res) => {
@@ -290,24 +320,20 @@ router.route('/hotel/:hotelId/rate')
                     return res.status(400).json({ message: 'You have to provide at least the rating or the comment!' });
                 }
 
-                const booking = await Booking.findOne({
+                const booking = await Booking.findOneAndUpdate({
                     user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
                     hotel: ObjectId(req.params.hotelId),
                     'bookedRooms.until': { $lt: new Date() }
-                }).exec();
+                }, {
+                    $set: {
+                        ...(req.body.rating !== undefined ? { rating: req.body.rating } : {}),
+                        ...(req.body.opinion !== undefined ? { opinion: req.body.opinion } : {})
+                    }
+                }, { new: true }).exec();
 
                 if (!booking) {
                     return res.status(404).json({ message: 'You cannot rate a hotel until you spent time there!' });
                 }
-
-                if (req.body.rating !== undefined) {
-                    booking.rating = req.body.rating;
-                }
-                if (req.body.opinion !== undefined) {
-                    booking.opinion = req.body.opinion;
-                }
-
-                await booking.save();
 
                 return res.status(200).json({});
             } catch (error) {
@@ -329,19 +355,16 @@ router.route('/hotel/:hotelId/rate')
         requireLogin(),
         async (req, res) => {
             try {
-                const booking = await Booking.findOne({
+                const booking = await Booking.findOneAndUpdate({
                     user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
                     hotel: ObjectId(req.params.hotelId)
-                }).exec();
+                }, {
+                    $unset: { rating: '', opinion: '' }
+                }, { new: true }).exec();
 
                 if (!booking) {
                     return res.status(404).json({ message: 'You have not booked a room in this hotel yet!' });
                 }
-
-                booking.rating = undefined;
-                booking.opinion = undefined;
-
-                await booking.save();
 
                 return res.status(200).json({});
             } catch (error) {
