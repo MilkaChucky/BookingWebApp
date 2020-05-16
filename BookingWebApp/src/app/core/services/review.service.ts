@@ -15,7 +15,7 @@ export class ReviewService {
 
   constructor(private http: HttpClient) { }
 
-  addBooking(dto: RatingModel, hotelId: string): Observable<any> {
+  addReview(dto: RatingModel, hotelId: string): Observable<any> {
     const url = this.backendUrl + `bookings/hotel/${hotelId}/rating`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

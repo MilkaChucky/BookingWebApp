@@ -18,11 +18,12 @@ export interface RoomBookingModel {
 
 export interface BookingDto {
     _id: string;
-    hotel: string;
+    hotel: {_id: string, name: string, address: string};
     bookedRooms: RoomBookingDto[];
 }
 
 export interface RoomBookingDto {
+    _id: string;
     from: Date | string;
     until: Date | string;
     roomId: string;

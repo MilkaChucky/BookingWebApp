@@ -1,4 +1,4 @@
 export interface RatingModel {
-    rating?: string;
+    rating?: number;
     opinion?: string;
 }

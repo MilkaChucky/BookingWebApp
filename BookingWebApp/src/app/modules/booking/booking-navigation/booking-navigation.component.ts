@@ -16,12 +16,11 @@ export class BookingNavigationComponent implements OnInit {
   @ViewChild('MasterPaginator', { static: true }) masterPaginator: MatPaginator;
   @ViewChild('DetailsPaginator', { static: true }) detailsPaginator: MatPaginator;
 
-  displayedColumns: string[] = ['hotel'];
-  displayedColumnsRooms: string[] = ['number', 'from', 'to'];
+  displayedColumns: string[] = ['hotelname', 'hoteladdress'];
+  displayedColumnsRooms: string[] = ['number', 'from', 'to', 'delete'];
   dataSource: MatTableDataSource<BookingDto>;
   selection: SelectionModel<BookingDto>;
   dataSourceRooms: MatTableDataSource<RoomBookingDto>;
-  rSelection: SelectionModel<RoomBookingDto>;
 
   hotels: HotelModel[];
   bookings: BookingDto[];
@@ -40,6 +39,7 @@ export class BookingNavigationComponent implements OnInit {
   async ngOnInit() {
     this.bService.getBookings().subscribe(res => {
       this.bookings = res;
+      console.log(res);
 
       this.dataSource = new MatTableDataSource<BookingDto>(this.bookings);
       this.rooms = [];
@@ -48,10 +48,6 @@ export class BookingNavigationComponent implements OnInit {
       const initialSelection = [];
       const allowMultiSelect = false;
       this.selection = new SelectionModel<BookingDto>(allowMultiSelect, initialSelection);
-
-      const initialRoomSelection = [];
-      const allowMultiSelectRooms = false;
-      this.rSelection = new SelectionModel<RoomBookingDto>(allowMultiSelectRooms, initialRoomSelection);
 
       this.dataSource.paginator = this.masterPaginator;
       this.dataSourceRooms.paginator = this.detailsPaginator;
@@ -70,38 +66,15 @@ export class BookingNavigationComponent implements OnInit {
     }
   }
 
-  selectRoomRow(row: RoomBookingDto) {
-    if (this.rSelection.isSelected(row)) {
-      this.rSelection.deselect(row);
-    } else {
-      this.rSelection.select(row);
-    }
-  }
-
-  isRoomSelected(row: RoomBookingDto) {
-    if (!!row) {
-      return this.rSelection.isSelected(row);
-    } else {
-      return false;
-    }
-  }
-
-  deleteHotelBooking() {
-    if (!!!this.selection || !!!this.selection.selected || this.selection.selected.length === 0) {
-      this.snack.open('Please, select one or more hotel to delete first!', 'Warning', { duration: 2000 });
-      return;
-    }
-    this.selection.clear();
-  }
-
-  deleteRoomBooking() {
-    if (!!!this.rSelection || !!!this.rSelection.selected || this.rSelection.selected.length === 0) {
-      this.snack.open('Please, select one or more room to delete first!', 'Warning', {
-        duration: 2000
-      });
-      return;
-    }
-    this.rSelection.clear();
+  deleteBooking(id: string) {
+    this.bService.deleteBooking(id).subscribe(res => {
+      this.rooms = this.rooms.filter(x => x._id !== id);
+      this.dataSourceRooms = new MatTableDataSource<RoomBookingDto>(this.rooms);
+      this.selection.selected[0].bookedRooms = this.rooms;
+      this.snack.open('Booking deleted successfully!', 'Update', { duration: 2000 });
+    }, err => {
+        this.snack.open('Error while deleting booking!', 'Error', { duration: 2000 });
+    });
   }
 
 }
