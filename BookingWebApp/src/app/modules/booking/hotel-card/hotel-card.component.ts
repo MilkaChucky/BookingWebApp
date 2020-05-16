@@ -28,7 +28,7 @@ export class HotelCardComponent implements OnInit {
   }
 
   goToRoomNavigation(): void {
-    this.router.navigate(['booking', this.hotel._id, 'rooms']);
+    this.router.navigate(['hotels', this.hotel._id, 'rooms']);
   }
 
 }

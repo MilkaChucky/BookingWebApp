@@ -8,10 +8,21 @@ import { RoomNavigationComponent } from './modules/booking/room-navigation/room-
 import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin-navigation.component';
 import { EditHotelComponent } from './modules/admin/admin-navigation/edit/edit-hotel/edit-hotel.component';
 import { EditRoomComponent } from './modules/admin/admin-navigation/edit/edit-room/edit-room.component';
+import { BookingNavigationComponent } from './modules/booking/booking-navigation/booking-navigation.component';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
-  { path: 'booking',
+  {
+    path: 'booking',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: BookingNavigationComponent,
+      }
+    ]
+  },
+  { path: 'hotels',
     canActivate: [AuthGuard],
     children: [
       {

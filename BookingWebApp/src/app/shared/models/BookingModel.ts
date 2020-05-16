@@ -1,3 +1,5 @@
+import { RoomModel } from './RoomModel'
+
 export interface BookingModel {
     _id: string;
     user: string;       // user _id
@@ -14,6 +16,19 @@ export interface RoomBookingModel {
     until: Date;
 }
 
+export interface BookingDto {
+    _id: string;
+    hotel: string;
+    bookedRooms: RoomBookingDto[];
+}
+
+export interface RoomBookingDto {
+    from: Date | string;
+    until: Date | string;
+    roomId: string;
+    room: RoomModel;
+}
+
 export interface AddBookingDto {
     rooms: RoomBookingModel[];
-};
+}

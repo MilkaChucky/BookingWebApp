@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from './../../../environments/environment';
 import { of, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { BookingModel, AddBookingDto } from 'src/app/shared/models/BookingModel';
+import { BookingModel, AddBookingDto, BookingDto } from 'src/app/shared/models/BookingModel';
 
 @Injectable({
   providedIn: 'root'
@@ -25,16 +25,16 @@ export class BookingService {
     return of(true);
   }
 
-  getBookings(): Observable<BookingModel[]> {
+  getBookings(): Observable<BookingDto[]> {
     const url = this.backendUrl + `bookings`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
-    return this.http.get<BookingModel[]>(url, httpOptions)
+    return this.http.get<BookingDto[]>(url, httpOptions)
       .pipe(
-        tap(_ => console.log('[HotelService] Fetching bookings...')),
-        catchError(this.handleError<BookingModel[]>([]))
+        tap(_ => console.log('[BookingService] Fetching bookings...')),
+        catchError(this.handleError<BookingDto[]>([]))
       );
   }
 
@@ -46,7 +46,7 @@ export class BookingService {
     };
     return this.http.post<AddBookingDto>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Adding booking: + ${dto}`)),
+        tap(_ => console.log(`[BookingService] Adding booking: + ${dto}`)),
         catchError(this.handleError<AddBookingDto>({} as AddBookingDto))
       );
   }
@@ -59,7 +59,7 @@ export class BookingService {
     };
     return this.http.put<BookingModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Updating booking: + ${dto}`)),
+        tap(_ => console.log(`[BookingService] Updating booking: + ${dto}`)),
         catchError(this.handleError<BookingModel>({} as BookingModel))
       );
   }
@@ -72,7 +72,7 @@ export class BookingService {
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Deleting bookings for user, hotel (id): + ${userId} + ${hotelId}`)),
+        tap(_ => console.log(`[BookingService] Deleting bookings for user, hotel (id): + ${userId} + ${hotelId}`)),
         catchError(this.handleError<boolean>(false))
       );
   }
