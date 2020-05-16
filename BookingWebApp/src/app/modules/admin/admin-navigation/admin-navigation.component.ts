@@ -21,7 +21,7 @@ export class AdminNavigationComponent implements OnInit {
   @ViewChild('DetailsPaginator', { static: true }) detailsPaginator: MatPaginator;
 
   displayedColumns: string[] = ['_id', 'name', 'address', 'image'];
-  displayedColumnsRooms: string[] = ['_id', 'number', 'beds', 'price', 'image', 'free'];
+  displayedColumnsRooms: string[] = ['_id', 'number', 'beds', 'price', 'image'];
   dataSource: MatTableDataSource<HotelModel>;
   selection: SelectionModel<HotelModel>;
   dataSourceRooms: MatTableDataSource<RoomModel>;
@@ -59,13 +59,6 @@ export class AdminNavigationComponent implements OnInit {
 
       this.dataSource.paginator = this.masterPaginator;
       this.dataSourceRooms.paginator = this.detailsPaginator;
-
-      // TODO: remove after implementing booking
-      this.hotels.forEach(h => {
-        h.rooms.forEach(r => {
-          r.free = true;
-        });
-      });
     });
   }
 
@@ -84,16 +77,10 @@ export class AdminNavigationComponent implements OnInit {
   }
 
   selectRoomRow(row: RoomModel) {
-    if (row.free) {
-      if (this.rSelection.isSelected(row)) {
-        this.rSelection.deselect(row);
-      } else {
-        this.rSelection.select(row);
-      }
+    if (this.rSelection.isSelected(row)) {
+      this.rSelection.deselect(row);
     } else {
-      this.snack.open('Only free rooms can be selected!', 'Warning', {
-        duration: 2000
-      });
+      this.rSelection.select(row);
     }
   }
 

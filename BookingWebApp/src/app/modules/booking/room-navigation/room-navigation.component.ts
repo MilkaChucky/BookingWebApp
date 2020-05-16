@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 export class RoomNavigationComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['roomNumber', 'beds', 'free', 'price', 'images'];
+  displayedColumns: string[] = ['roomNumber', 'beds', 'price', 'images'];
   dataSource: MatTableDataSource<RoomModel>;
   selection: SelectionModel<RoomModel>;
 
@@ -29,6 +29,8 @@ export class RoomNavigationComponent implements OnInit {
   isPageInitialized: boolean;
   readonly imagesRoomsUrl = environment.imagesRoomsUrl;
 
+  hotelId: string;
+
   constructor(
     private rService: RoomService,
     private bService: BookingService,
@@ -38,8 +40,8 @@ export class RoomNavigationComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const id = this.route.snapshot.params.id;
-    this.rService.getRooms(id).subscribe((res: RoomModel[]) => {
+    this.hotelId = this.route.snapshot.params.id;
+    this.rService.getRooms(this.hotelId).subscribe((res: RoomModel[]) => {
       this.rooms = res;
       this.dataSource = new MatTableDataSource<RoomModel>(this.rooms);
 
@@ -63,16 +65,10 @@ export class RoomNavigationComponent implements OnInit {
   }
 
   selectRow(row: RoomModel) {
-    if (row.free) {
-      if (this.selection.isSelected(row)) {
-        this.selection.deselect(row);
-      } else {
-        this.selection.select(row);
-      }
+    if (this.selection.isSelected(row)) {
+      this.selection.deselect(row);
     } else {
-      this.snack.open('Only free rooms can be selected!', 'Warning', {
-        duration: 2000
-      });
+      this.selection.select(row);
     }
   }
 
@@ -83,20 +79,28 @@ export class RoomNavigationComponent implements OnInit {
       });
       return;
     }
-    const idList = [];
-    this.selection.selected.forEach(r => {
-      idList.push(r._id);
-    });
-    this.bService.bookRooms(idList).subscribe(res => {
-      if (!!res) {
-        this.snack.open('Saved successfully!', 'Update', {
-          duration: 2000
-        });
-      } else {
-        this.snack.open('Error while saving!', 'Error', {
-          duration: 2000
-        });
-      }
+    if (this.bookingForm.invalid) {
+      this.snack.open('Please, select begin and end date first!', 'Error', {
+        duration: 2000
+      });
+      return;
+    }
+
+    const dateFrom = this.bookingForm.get('from').value;
+    const dateTo = this.bookingForm.get('to').value;
+
+    this.bService.addBooking({ rooms: [{
+      roomId: this.selection.selected[0]._id,
+      from: dateFrom,
+      until: dateTo
+    }]}, this.hotelId).subscribe(res => {
+      this.snack.open('Booking is successfull!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snack.open('Booking failed!', 'Update', {
+        duration: 2000
+      });
     });
   }
 
