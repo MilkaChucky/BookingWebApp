@@ -7,6 +7,7 @@ const fileUpload = require('express-fileupload');
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const { port, secret, mongodb, imageFolderPath } = require('./config');
+const { globalErrorHandler } = require('./middlewares/error.middlewares');
 const { connect:ConnectToMongoDB } = require('mongoose');
 const User = require('./models/user.model');
 
@@ -69,6 +70,8 @@ app.use('/api/users', require('./routes/users.routes'));
 app.use('/api/hotels', require('./routes/hotels.routes'));
 app.use('/api/bookings', require('./routes/bookings.routes'));
 app.use('/api/files/images', express.static(imageFolderPath));
+
+app.use(globalErrorHandler);
 
 app.listen(port, () => {
     console.log(`BookingWebApi is running on port ${port}`);
