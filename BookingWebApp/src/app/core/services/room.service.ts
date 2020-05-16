@@ -35,7 +35,7 @@ export class RoomService {
     };
     return this.http.get<RoomModel>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Fetching room for roomNumber: + ${roomNumber}`)),
+        tap(_ => console.log(`[HotelService] Fetching room for roomNumber, hotelid: ${roomNumber} + ${hotelId}`)),
         catchError(this.handleError<RoomModel>('getRoom', {} as RoomModel))
       );
   }
@@ -59,9 +59,10 @@ export class RoomService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
+    console.log(JSON.stringify(dto));
     return this.http.put<RoomModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Updating room: + ${dto}`)),
+        tap(_ => console.log(`[HotelService] Updating room:\n ${JSON.stringify(dto)}`)),
         catchError(this.handleError<RoomModel>('updateRoom', {} as RoomModel))
       );
   }

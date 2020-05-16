@@ -30,20 +30,26 @@ export class EditRoomComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isNew = this.route.snapshot.params.id === undefined;
+    const roomNumber = parseInt(this.route.snapshot.params.id, 10);
+    this.isNew = roomNumber === this.route.snapshot.params.id;
     this.hotelId = this.route.snapshot.params.hotelId;
 
-    if (!!this.model) {
-      this.roomForm = new FormGroup({
-        number: new FormControl(this.model.number, [
-          Validators.required
-        ]),
-        beds: new FormControl(this.model.beds, [
-          Validators.required
-        ]),
-        price: new FormControl(this.model.price, [
-          Validators.required
-        ])
+    if (!this.isNew) {
+      this.rService.getRoom(this.hotelId, roomNumber).subscribe( res => {
+        this.model = res;
+        console.log(res);
+        this.roomForm = new FormGroup({
+          number: new FormControl(this.model.number, [
+            Validators.required
+          ]),
+          beds: new FormControl(this.model.beds, [
+            Validators.required
+          ]),
+          price: new FormControl(this.model.price, [
+            Validators.required
+          ])
+        });
+        this.isPageInitialized = true;
       });
     } else {
       this.model = {} as RoomModel;
@@ -58,9 +64,8 @@ export class EditRoomComponent implements OnInit {
           Validators.required
         ])
       });
+      this.isPageInitialized = true;
     }
-
-    this.isPageInitialized = true;
   }
 
   updateModelWithForm() {
@@ -110,7 +115,7 @@ export class EditRoomComponent implements OnInit {
   }
 
   uploadRoomPhoto(file: File, roomNumber: number): void {
-    this.iService.uploadRoomImage(file, roomNumber).subscribe(res => {
+    this.iService.uploadRoomImage(file, this.hotelId, roomNumber).subscribe(res => {
       this.snackBar.open('Photo upload successful!', 'Update', {
         duration: 2000
       });

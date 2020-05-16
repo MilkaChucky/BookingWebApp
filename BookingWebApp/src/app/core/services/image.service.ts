@@ -27,8 +27,8 @@ export class ImageService {
       );
   }
 
-  uploadRoomImage(photo: File, roomNumber: number): Observable<boolean> {
-    const url = this.backendUrl + 'rooms/' + roomNumber + '/images';
+  uploadRoomImage(photo: File, hotelId: string, roomNumber: number): Observable<boolean> {
+    const url = this.backendUrl + 'hotels/' + hotelId + '/rooms/' + roomNumber + '/images';
     const httpOptions = {
       withCredentials: true
     };

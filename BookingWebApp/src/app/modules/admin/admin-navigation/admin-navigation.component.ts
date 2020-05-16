@@ -172,7 +172,7 @@ export class AdminNavigationComponent implements OnInit {
       this.snack.open('Please, select a room to edit first!', 'Warning', { duration: 2000 });
       return;
     }
-    this.router.navigate(['admin', 'edit-room', this.rSelection.selected[0]._id, { hotelId: this.selection.selected[0]._id }]);
+    this.router.navigate(['admin', 'edit-room', this.rSelection.selected[0].number, { hotelId: this.selection.selected[0]._id }]);
   }
 
   deleteRoom() {
