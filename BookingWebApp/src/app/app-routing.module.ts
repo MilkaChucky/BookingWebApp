@@ -6,10 +6,23 @@ import { AuthGuard } from './modules/authentication/auth.guard';
 import { HotelNavigationComponent } from './modules/booking/hotel-navigation/hotel-navigation.component';
 import { RoomNavigationComponent } from './modules/booking/room-navigation/room-navigation.component';
 import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin-navigation.component';
+import { EditHotelComponent } from './modules/admin/admin-navigation/edit/edit-hotel/edit-hotel.component';
+import { EditRoomComponent } from './modules/admin/admin-navigation/edit/edit-room/edit-room.component';
+import { BookingNavigationComponent } from './modules/booking/booking-navigation/booking-navigation.component';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
-  { path: 'booking',
+  {
+    path: 'booking',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: BookingNavigationComponent,
+      }
+    ]
+  },
+  { path: 'hotels',
     canActivate: [AuthGuard],
     children: [
       {
@@ -28,6 +41,22 @@ export const routes: Routes = [
       {
         path: '',
         component: AdminNavigationComponent
+      },
+      {
+        path: 'add-hotel',
+        component: EditHotelComponent
+      },
+      {
+        path: 'edit-hotel/:id',
+        component: EditHotelComponent
+      },
+      {
+        path: 'add-room',
+        component: EditRoomComponent
+      },
+      {
+        path: 'edit-room/:id',
+        component: EditRoomComponent
       }
     ]
   },

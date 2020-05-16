@@ -3,10 +3,16 @@
         <span>FindYourRoom Hotel Room Booking</span>
         <span class="spacer"></span>
         <button 
-            *ngIf='auth.isAuthAndGuest()' 
+            *ngIf='auth.isAuthenticated()' 
             routerLink='/booking'
             class="ghost-button-white">
-            Booking
+            Cancel Bookings
+        </button>
+        <button 
+            *ngIf='auth.isAuthenticated()' 
+            routerLink='/hotels'
+            class="ghost-button-white">
+            Hotels
         </button>
         <button
             *ngIf='auth.isAuthAndAdmin()' 

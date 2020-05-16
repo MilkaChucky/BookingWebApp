@@ -6,34 +6,23 @@
 
 <div class="mat-elevation-z8 table-wrapper">
     <table mat-table [dataSource]="dataSource">
-        <!-- Id Column -->
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="_id">
             <th mat-header-cell *matHeaderCellDef> Id </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            <td mat-cell *matCellDef="let element"> {{element._id}} </td>
         </ng-container>
-
-        <!-- Name Column -->
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
-
-        <!-- Address Column -->
         <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef> Address </th>
             <td mat-cell *matCellDef="let element"> {{element.address}} </td>
         </ng-container>
-
-        <!-- Price Column -->
-        <ng-container matColumnDef="price">
-            <th mat-header-cell *matHeaderCellDef> Price </th>
-            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
-        </ng-container>
-
-        <!-- Review Column -->
-        <ng-container matColumnDef="review">
-            <th mat-header-cell *matHeaderCellDef> Review </th>
-            <td mat-cell *matCellDef="let element"> {{element.review}} </td>
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element">
+                <img src="{{imagesHotelsUrl + element.images[0]}}" alt="Photo of Hotel">
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -53,34 +42,27 @@
 
 <div class="mat-elevation-z8 table-wrapper">
     <table mat-table [dataSource]="dataSourceRooms">
-        <!-- Id Column -->
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="_id">
             <th mat-header-cell *matHeaderCellDef> Id </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            <td mat-cell *matCellDef="let element"> {{element._id}} </td>
         </ng-container>
-
-        <!-- Hotel Id Column -->
-        <ng-container matColumnDef="hotelId">
-            <th mat-header-cell *matHeaderCellDef> HotelId </th>
-            <td mat-cell *matCellDef="let element"> {{element.hotelId}} </td>
+        <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef> Room Number </th>
+            <td mat-cell *matCellDef="let element"> {{element.number}} </td>
         </ng-container>
-
-        <!-- RoomNumber Column -->
-        <ng-container matColumnDef="roomNumber">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let element"> {{element.roomNumber}} </td>
-        </ng-container>
-
-        <!-- Beds Column -->
         <ng-container matColumnDef="beds">
             <th mat-header-cell *matHeaderCellDef> Beds </th>
             <td mat-cell *matCellDef="let element"> {{element.beds}} </td>
         </ng-container>
-
-        <!-- Free Column -->
-        <ng-container matColumnDef="free">
-            <th mat-header-cell *matHeaderCellDef> Free </th>
-            <td mat-cell *matCellDef="let element"> {{element.free}} </td>
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+        </ng-container>
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element">
+                <img src="{{imagesRoomsUrl + element.images[0]}}" alt="Photo of Hotel">
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumnsRooms"></tr>

@@ -1,7 +1,7 @@
 export interface RoomModel {
-    id: number;
-    hotelId: number;
-    roomNumber: number;
+    _id: string;
+    number: number;
     beds: number;
-    free: boolean;
+    price?: number;
+    images?: string[];
 }
