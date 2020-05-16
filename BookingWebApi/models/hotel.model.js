@@ -38,8 +38,7 @@ const schema = new Schema({
             },
             'The room number must be unique!'
         ]
-    },
-    review: { type: Number }
+    }
 }, { toObject: { versionKey: false }, toJSON: { versionKey: false } });
 
 module.exports = model('hotel', schema);
