@@ -31,7 +31,7 @@ transporter.verify((error, success) => {
 router.route('/')
     .get(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const bookingIds = req.query.bookingIds && req.query.bookingIds.map(bookingId => ObjectId(bookingId));
 
@@ -42,7 +42,7 @@ router.route('/')
                                 {
                                     ...(req.query.user && { user: ObjectId(req.query.user) })
                                 } : {
-                                    user: req.user._id
+                                    user: ObjectId(req.user._id)
                                 }),
                             ...(req.query.hotel && {
                                 hotel: ObjectId(req.query.hotel)
@@ -106,12 +106,12 @@ router.route('/')
 
                 return res.status(200).json(bookings);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         })
     .delete(
         allowForRole('admin'),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 if (!req.query.hotel && !req.query.userId) {
                     return res.status(400).json({ message: 'At least one of the following must be provided: "hotel", "user"!' });
@@ -124,14 +124,14 @@ router.route('/')
 
                 return res.status(200).json(deleted);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         });
 
 router.route('/:bookingId')
     .put(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 if (!req.body.room && !req.body.from && !req.body.until) {
                     return res.status(400).json({ message: 'You have provide valid fields to update!' });
@@ -154,9 +154,9 @@ router.route('/:bookingId')
 
                 const booking = await Booking.findOne({
                     ...(req.body.user && req.user.role === 'admin' ? {
-                        user: req.body.user
+                        user: ObjectId(req.body.user)
                     } : {
-                            user: req.user._id
+                            user: ObjectId(req.user._id)
                         }),
                     bookedRooms: { $elemMatch: { _id: req.params.bookingId } }
                 }).exec();
@@ -175,23 +175,12 @@ router.route('/:bookingId')
 
                 return res.status(200).json(updated);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         })
     .delete(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const modified = await Booking.findOneAndUpdate({
                     bookedRooms: { $elemMatch: { _id: ObjectId(req.params.bookingId) } }
@@ -206,13 +195,13 @@ router.route('/:bookingId')
 
                 return res.status(200).json(result);
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return next(error);
             }
         });
 
 router.route('/room/:roomId')
     .get(
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const intervals = await Booking.aggregate([
                     { $unwind: { path: '$bookedRooms' } },
@@ -228,35 +217,24 @@ router.route('/room/:roomId')
 
                 return res.status(200).json(intervals);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         });
 
 router.route('/hotel/:hotelId')
     .post(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 if (!req.body.rooms || !req.body.rooms.length) {
                     return res.status(400).json({ message: 'At least one room has to be provided, that needs to be booked!' });
                 }
 
                 const booking = await Booking.findOneAndUpdate({
-                    user: req.user._id,
+                    user: ObjectId(req.user._id),
                     hotel: ObjectId(req.params.hotelId)
                 }, {
-                    $setOnInsert: { user: req.user._id, hotel: req.params.hotelId },
+                    $setOnInsert: { user: ObjectId(req.user._id), hotel: req.params.hotelId },
                     $push: { bookedRooms: { $each: req.body.rooms } }
                 }, { upsert: true, runValidators: true, context: 'query', new: true }).exec();
 
@@ -317,24 +295,13 @@ router.route('/hotel/:hotelId')
 
                 return res.status(200).json(result);
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         });
 
 router.route('/hotel/:hotelId/rating')
     .get(
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const ratings = await Booking.find({
                     hotel: ObjectId(req.params.hotelId),
@@ -348,30 +315,19 @@ router.route('/hotel/:hotelId/rating')
                     ratings: ratings
                 });
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         })
     .post(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 if (!req.body || (req.body.rating === undefined && req.body.opinion === undefined)) {
                     return res.status(400).json({ message: 'You have to provide at least the rating or the comment!' });
                 }
 
                 const booking = await Booking.findOneAndUpdate({
-                    user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
+                    user: ObjectId(req.user.role === 'admin' && req.body.user ? req.body.user : req.user._id),
                     hotel: ObjectId(req.params.hotelId),
                     'bookedRooms.until': { $lt: new Date() }
                 }, {
@@ -387,26 +343,15 @@ router.route('/hotel/:hotelId/rating')
 
                 return res.status(200).json({});
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         })
     .delete(
         requireLogin(),
-        async (req, res) => {
+        async (req, res, next) => {
             try {
                 const booking = await Booking.findOneAndUpdate({
-                    user: (req.user.role === 'admin' && req.body.user ? ObjectId(req.body.user) : req.user._id),
+                    user: ObjectId(req.user.role === 'admin' && req.body.user ? req.body.user : req.user._id),
                     hotel: ObjectId(req.params.hotelId)
                 }, {
                     $unset: { rating: '', opinion: '' }
@@ -418,18 +363,7 @@ router.route('/hotel/:hotelId/rating')
 
                 return res.status(200).json({});
             } catch (error) {
-                switch (error.name) {
-                    case 'ValidationError':
-                        return res.status(400).json({ message: error.message });
-                    case 'CastError':
-                        let err = error;
-                        while (err.reason && err.reason.path) {
-                            err = err.reason;
-                        }
-                        return res.status(400).json({ message: `${err.value} is not a valid value for ${err.path}!` });
-                    default:
-                        return res.status(500).json({ error: error });
-                }
+                return next(error);
             }
         });
 
