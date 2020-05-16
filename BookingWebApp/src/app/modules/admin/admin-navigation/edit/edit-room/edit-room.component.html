@@ -8,6 +8,10 @@
         <mat-label>Number of Beds</mat-label>
         <input matInput type='number' formControlName='beds' required />
     </mat-form-field>
+    <mat-form-field>
+        <mat-label>Price</mat-label>
+        <input matInput type='number' formControlName='price' required />
+    </mat-form-field>
     <div>
         <mat-label>Photo</mat-label>
         <input type="file" class="upload-photo" (change)="getPhotoFile($event.target.files)" />

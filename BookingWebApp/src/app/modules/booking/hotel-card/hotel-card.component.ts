@@ -3,6 +3,7 @@ import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { HotelService } from 'src/app/core/services/hotel.service';
 import { MatSlider, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { BookingModel } from 'src/app/shared/models/BookingModel';
 
 @Component({
   selector: 'app-hotel-card',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class HotelCardComponent implements OnInit {
   @ViewChild(MatSlider , {static: false}) slider: MatSlider;
   @Input() hotel: HotelModel;
+  booking: BookingModel;
 
   constructor(
     private hService: HotelService,
@@ -20,6 +22,7 @@ export class HotelCardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.booking = {} as BookingModel;
   }
 
   goToRoomNavigation(): void {

@@ -48,6 +48,9 @@ export class EditRoomComponent implements OnInit {
         ]),
         beds: new FormControl(this.model.beds, [
           Validators.required
+        ]),
+        price: new FormControl(this.model.price, [
+          Validators.required
         ])
       });
     } else {
@@ -57,6 +60,9 @@ export class EditRoomComponent implements OnInit {
           Validators.required
         ]),
         beds: new FormControl('', [
+          Validators.required
+        ]),
+        price: new FormControl('', [
           Validators.required
         ])
       });
@@ -68,6 +74,7 @@ export class EditRoomComponent implements OnInit {
   updateModelWithForm() {
     this.model.number = parseInt(this.roomForm.get('number').value, 10);
     this.model.beds = parseInt(this.roomForm.get('beds').value, 10);
+    this.model.price = parseInt(this.roomForm.get('price').value, 10);
   }
 
   save() {

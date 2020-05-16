@@ -14,7 +14,7 @@ import { HotelModel } from 'src/app/shared/models/HotelModel';
 export class RoomNavigationComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['roomNumber', 'beds', 'free'];
+  displayedColumns: string[] = ['roomNumber', 'beds', 'free', 'price', 'images'];
   dataSource: MatTableDataSource<RoomModel>;
   selection: SelectionModel<RoomModel>;
 
@@ -30,17 +30,16 @@ export class RoomNavigationComponent implements OnInit {
 
   async ngOnInit() {
     const id = this.route.snapshot.params.id;
-    this.hService.getHotels().subscribe(res => {
-      this.hotels = res;
-      this.rooms = this.hotels.find(x => x._id === id).rooms;
+    this.hService.getRooms(id).subscribe((res: RoomModel[]) => {
+      this.rooms = res;
       this.dataSource = new MatTableDataSource<RoomModel>(this.rooms);
+
+      const initialSelection = [];
+      const allowMultiSelect = true;
+      this.selection = new SelectionModel<RoomModel>(allowMultiSelect, initialSelection);
+
+      this.dataSource.paginator = this.paginator;
     });
-
-    const initialSelection = [];
-    const allowMultiSelect = true;
-    this.selection = new SelectionModel<RoomModel>(allowMultiSelect, initialSelection);
-
-    this.dataSource.paginator = this.paginator;
   }
 
   selectRow(row: RoomModel) {
