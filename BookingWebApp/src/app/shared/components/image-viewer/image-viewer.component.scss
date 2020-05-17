@@ -1,0 +1,38 @@
+div {
+    display: flex;
+    flex-direction: row;
+    max-width: 250px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+
+    span {
+        font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 25%;
+        transition-duration: .5s;
+        cursor: default;
+
+        &.button-next {
+            margin-left: 10px;
+        }
+        &.button-previous {
+            margin-right: 10px;
+        }
+        &:hover {
+            color: grey;
+            transition-duration: .5s;
+        }
+    }
+
+    img {
+        width: 200px;
+    }
+}
+
+div, img {
+    height: 125px;
+}

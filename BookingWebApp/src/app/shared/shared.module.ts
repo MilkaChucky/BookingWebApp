@@ -9,6 +9,7 @@ import { routes } from './../app-routing.module';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { ImageViewerComponent } from './components/image-viewer/image-viewer.component';
 
 @NgModule({
   imports: [
@@ -20,14 +21,16 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
     HttpClientModule
   ],
   declarations: [
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ImageViewerComponent
   ],
   exports: [
     MaterialModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ImageViewerComponent
   ],
   providers: [
     HttpClientModule

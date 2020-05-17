@@ -16,6 +16,7 @@
     <div>
         <mat-label>Photo</mat-label>
         <input type="file" class="upload-photo" (change)="getPhotoFile($event.target.files)" />
+        <button *ngIf='!isNew' class='ghost-button-white' (click)="deleteImages()">Delete Uploaded Images</button>
     </div>
 </form>
 
