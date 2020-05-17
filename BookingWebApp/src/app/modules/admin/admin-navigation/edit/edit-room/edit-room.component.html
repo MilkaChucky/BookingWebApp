@@ -24,3 +24,26 @@
     <button class='ghost-button-white' (click)="save()" cdkFocusInitial>Save</button>
     <button class='ghost-button-white' (click)="cancel()">Cancel</button>
 </div>
+
+<h1 class="ghost-headline-white" *ngIf='!isNew'>Delete Images</h1>
+
+<div class="mat-elevation-z8 table-wrapper" *ngIf='!isNew'>
+    <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Photos </th>
+            <td mat-cell *matCellDef="let element">
+                <img class="card-image centered" src="{{imagesRoomsUrl + element}}" alt="No Photo Provided">
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Cancel </th>
+            <td mat-cell *matCellDef="let element">
+                <mat-icon matTooltip='delete image' (click)='deleteImage(element)'>delete</mat-icon>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['image', 'delete']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['image', 'delete'];"></tr>
+    </table>
+</div>

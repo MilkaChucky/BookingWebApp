@@ -40,25 +40,25 @@ export class ImageService extends BaseServiceClass {
       );
   }
 
-  deleteHotelImage(photos: string[], id: string): Observable<boolean> {
+  deleteHotelImages(photos: string[], id: string): Observable<boolean> {
     const url = this.backendUrl + 'hotels/' + id + '/images/delete';
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
-    return this.http.post<boolean>(url, JSON.stringify(photos), httpOptions)
+    return this.http.post<boolean>(url, JSON.stringify({ images: photos }), httpOptions)
       .pipe(
         catchError(this.handleError())
       );
   }
 
-  deleteRoomImage(photos: string[], hotelId: string, roomNumber: number): Observable<boolean> {
+  deleteRoomImages(photos: string[], hotelId: string, roomNumber: number): Observable<boolean> {
     const url = this.backendUrl + 'hotels/' + hotelId + '/rooms/' + roomNumber + '/images/delete';
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
-    return this.http.post<boolean>(url, JSON.stringify(photos), httpOptions)
+    return this.http.post<boolean>(url, JSON.stringify({ images: photos }), httpOptions)
       .pipe(
         catchError(this.handleError())
       );
