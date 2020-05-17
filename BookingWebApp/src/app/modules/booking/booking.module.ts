@@ -5,6 +5,7 @@ import { HotelNavigationComponent } from './hotel-navigation/hotel-navigation.co
 import { RoomNavigationComponent } from './room-navigation/room-navigation.component';
 import { HotelCardComponent } from './hotel-card/hotel-card.component';
 import { BookingNavigationComponent } from './booking-navigation/booking-navigation.component';
+import { ReviewNavigationComponent } from './review-navigation/review-navigation.component';
 
 
 
@@ -13,7 +14,8 @@ import { BookingNavigationComponent } from './booking-navigation/booking-navigat
     HotelNavigationComponent,
     HotelCardComponent,
     RoomNavigationComponent,
-    BookingNavigationComponent
+    BookingNavigationComponent,
+    ReviewNavigationComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { BookingNavigationComponent } from './booking-navigation/booking-navigat
   ],
   exports: [
     HotelNavigationComponent,
-    BookingNavigationComponent
+    BookingNavigationComponent,
+    ReviewNavigationComponent
   ]
 })
 export class BookingModule { }

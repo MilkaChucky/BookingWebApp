@@ -98,7 +98,7 @@ export class RoomNavigationComponent implements OnInit {
     });
 
     this.bService.addBooking({ rooms: roomBookings }, this.hotelId).subscribe(() => {
-      this.snack.open('Booking is successfull!', 'Update', {
+      this.snack.open('Booking is successfull! Informational email about the booking is sent to you!', 'Update', {
         duration: 2000
       });
       this.selection.clear();

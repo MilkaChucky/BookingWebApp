@@ -1,0 +1,54 @@
+div.table-wrapper {
+    display: block;
+    position: relative;
+    width: 90%;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    table, .mat-paginator {
+        width: 100%;
+        tr.selected {
+            background-color: beige;
+        }
+    }
+}
+
+div.toolbar {
+    position: relative;
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+mat-card {
+    display: flex;
+    flex-direction: column;
+    
+    margin: 15px;
+    padding: 16px;
+
+    img.card-image {
+        height: 125px;
+    }
+    
+    position: relative;
+    width: 250px;
+    height: 200px;
+
+    mat-card-subtitle {
+        height: 35px;
+    }
+
+    mat-card-actions {
+        align-self: center;
+    }
+
+    mat-card-content {
+        mat-form-field {
+            width: 100%;
+        }
+        mat-slider {
+            margin-top: 5px;
+            display: block !important;
+        }
+    }
+}
