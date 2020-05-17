@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { RatingModel } from 'src/app/shared/models/RatingModel';
+import { RatingModel, RatingsDto } from 'src/app/shared/models/RatingModel';
 import { BaseServiceClass } from './BaseServiceClass';
 
 @Injectable({
@@ -22,6 +22,19 @@ export class ReviewService extends BaseServiceClass {
       withCredentials: true
     };
     return this.http.post<any>(url, JSON.stringify(dto), httpOptions)
+      .pipe(
+        tap(_ => console.log(`[ReviewService] Adding review to: ${hotelId}`)),
+        catchError(this.handleError())
+      );
+  }
+
+  getReview(hotelId: string): Observable<RatingsDto> {
+    const url = this.backendUrl + `bookings/hotel/${hotelId}/rating`;
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      withCredentials: true
+    };
+    return this.http.get<RatingsDto>(url, httpOptions)
       .pipe(
         tap(_ => console.log(`[ReviewService] Adding review to: ${hotelId}`)),
         catchError(this.handleError())
