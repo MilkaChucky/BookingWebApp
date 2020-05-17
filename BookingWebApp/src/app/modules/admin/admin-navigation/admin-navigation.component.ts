@@ -7,6 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { RoomService } from 'src/app/core/services/room.service';
 import { environment } from 'src/environments/environment';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-admin-navigation',
@@ -103,18 +104,28 @@ export class AdminNavigationComponent implements OnInit {
       this.snack.open('Please, select one or more hotel to delete first!', 'Warning', { duration: 2000 });
       return;
     }
-    const hotelId = this.selection.selected[0]._id;
-    this.hService.deleteHotel(hotelId).subscribe(() => {
-      this.snack.open('Deleted successfully!', 'Update', {
-        duration: 2000
-      });
-      this.hotels = this.dataSource.data.filter(x => x._id !== hotelId);
-      this.dataSource.data = this.dataSource.data.filter(x => x._id !== hotelId);
-      this.selection.clear();
-    }, err => {
-      this.snack.open(err, 'Error', {
-        duration: 2000
-      });
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: { title: 'Are you sure about deleting the selected hotel?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const hotelId = this.selection.selected[0]._id;
+        this.hService.deleteHotel(hotelId).subscribe(() => {
+          this.snack.open('Deleted successfully!', 'Update', {
+            duration: 2000
+          });
+          this.hotels = this.dataSource.data.filter(x => x._id !== hotelId);
+          this.dataSource.data = this.dataSource.data.filter(x => x._id !== hotelId);
+          this.selection.clear();
+        }, err => {
+          this.snack.open(err, 'Error', {
+            duration: 2000
+          });
+        });
+      }
     });
   }
 
@@ -142,23 +153,32 @@ export class AdminNavigationComponent implements OnInit {
       return;
     }
 
-    const hotelId = this.selection.selected[0]._id;
-    const roomNumber = this.rSelection.selected[0].number;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: { title: 'Are you sure about deleting the room?' }
+    });
 
-    this.rService.deleteRoom(hotelId, roomNumber).subscribe(() => {
-      this.snack.open('Delete successful!', 'Update', {
-        duration: 2000
-      });
-      // Refreshing Grid
-      this.rooms = this.hotels.find(h => h._id === hotelId).rooms.filter(r => r.number !== roomNumber);
-      this.hotels.find(h => h._id === hotelId).rooms = this.rooms;
-      this.dataSource = new MatTableDataSource<HotelModel>(this.hotels);
-      this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
-      this.rSelection.clear();
-    }, err => {
-      this.snack.open(err, 'Error', {
-        duration: 2000
-      });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const hotelId = this.selection.selected[0]._id;
+        const roomNumber = this.rSelection.selected[0].number;
+
+        this.rService.deleteRoom(hotelId, roomNumber).subscribe(() => {
+          this.snack.open('Delete successful!', 'Update', {
+            duration: 2000
+          });
+          // Refreshing Grid
+          this.rooms = this.hotels.find(h => h._id === hotelId).rooms.filter(r => r.number !== roomNumber);
+          this.hotels.find(h => h._id === hotelId).rooms = this.rooms;
+          this.dataSource = new MatTableDataSource<HotelModel>(this.hotels);
+          this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
+          this.rSelection.clear();
+        }, err => {
+          this.snack.open(err, 'Error', {
+            duration: 2000
+          });
+        });
+      }
     });
   }
 
