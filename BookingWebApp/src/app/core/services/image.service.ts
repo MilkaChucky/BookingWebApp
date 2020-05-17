@@ -41,7 +41,7 @@ export class ImageService extends BaseServiceClass {
   }
 
   deleteHotelImage(photos: string[], id: string): Observable<boolean> {
-    const url = this.backendUrl + 'hotels/' + id + '/deleteimages';
+    const url = this.backendUrl + 'hotels/' + id + '/images/delete';
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
@@ -53,7 +53,7 @@ export class ImageService extends BaseServiceClass {
   }
 
   deleteRoomImage(photos: string[], hotelId: string, roomNumber: number): Observable<boolean> {
-    const url = this.backendUrl + 'hotels/' + hotelId + '/rooms/' + roomNumber + '/deleteimages';
+    const url = this.backendUrl + 'hotels/' + hotelId + '/rooms/' + roomNumber + '/images/delete';
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
