@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { environment } from './../../../environments/environment';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { BaseServiceClass } from './BaseServiceClass';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ImageService {
-  readonly backendUrl = environment.backendUrl;
+export class ImageService extends BaseServiceClass {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   uploadHotelImage(photo: File, id: string): Observable<boolean> {
     const url = this.backendUrl + 'hotels/' + id + '/images';
@@ -23,7 +24,7 @@ export class ImageService {
     return this.http.post<boolean>(url, formData, httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Uploading photo for hotel: (hotel id, photo): + ${id} + ${photo}`)),
-        catchError(this.handleError<boolean>(false))
+        catchError(this.handleError())
       );
   }
 
@@ -37,14 +38,8 @@ export class ImageService {
     return this.http.post<boolean>(url, formData, httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Uploading photo for room: (roomNumber, photo): + ${roomNumber} + ${photo}`)),
-        catchError(this.handleError<boolean>(false))
+        catchError(this.handleError())
       );
   }
 
-  private handleError<T>(result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
-  }
 }

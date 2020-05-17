@@ -92,30 +92,6 @@ export class AdminNavigationComponent implements OnInit {
     }
   }
 
-  bookRoom() {
-    if (this.selection === undefined || this.selection.selected.length === 0) {
-      this.snack.open('Error while saving!', 'Error', {
-        duration: 2000
-      });
-      return;
-    }
-    const idList = [];
-    this.selection.selected.forEach(r => {
-      idList.push(r._id);
-    });
-    this.bService.bookRooms(idList).subscribe(res => {
-      if (!!res) {
-        this.snack.open('Saved successfully!', 'Update', {
-          duration: 2000
-        });
-      } else {
-        this.snack.open('Error while saving!', 'Error', {
-          duration: 2000
-        });
-      }
-    });
-  }
-
   addHotel() {
     this.router.navigate(['admin', 'add-hotel']);
   }

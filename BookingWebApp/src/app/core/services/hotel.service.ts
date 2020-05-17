@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { environment } from './../../../environments/environment';
 import { HotelModel } from './../../shared/models/HotelModel';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { BaseServiceClass } from './BaseServiceClass';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HotelService {
-  readonly backendUrl = environment.backendUrl;
+export class HotelService extends BaseServiceClass {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   getHotels(): Observable<HotelModel[]> {
     const url = this.backendUrl + 'hotels';
@@ -23,7 +24,7 @@ export class HotelService {
     return this.http.get<HotelModel[]>(url, httpOptions)
       .pipe(
         tap(_ => console.log('[HotelService] Fetching hotels...')),
-        catchError(this.handleError<HotelModel[]>([]))
+        catchError(this.handleError())
       );
   }
 
@@ -36,7 +37,7 @@ export class HotelService {
     return this.http.get<HotelModel>(url, httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Fetching hotel for id: + ${id}`)),
-        catchError(this.handleError<HotelModel>({} as HotelModel))
+        catchError(this.handleError())
       );
   }
 
@@ -49,7 +50,7 @@ export class HotelService {
     return this.http.post<HotelModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Adding hotel: + ${dto}`)),
-        catchError(this.handleError<HotelModel>({} as HotelModel))
+        catchError(this.handleError())
       );
   }
 
@@ -62,7 +63,7 @@ export class HotelService {
     return this.http.put<HotelModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Updating hotel: + ${dto}`)),
-        catchError(this.handleError<HotelModel>({} as HotelModel))
+        catchError(this.handleError())
       );
   }
 
@@ -75,14 +76,8 @@ export class HotelService {
     return this.http.delete<HotelModel>(url, httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Deleting hotel (id): + ${id}`)),
-        catchError(this.handleError<HotelModel>({} as HotelModel))
+        catchError(this.handleError())
       );
   }
 
-  private handleError<T>(result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
-  }
 }
