@@ -31,7 +31,7 @@ export class EditRoomComponent implements OnInit {
 
   ngOnInit() {
     const roomNumber = parseInt(this.route.snapshot.params.id, 10);
-    this.isNew = roomNumber === this.route.snapshot.params.id;
+    this.isNew = this.route.snapshot.params.id === undefined;
     this.hotelId = this.route.snapshot.params.hotelId;
 
     if (!this.isNew) {

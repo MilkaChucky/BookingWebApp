@@ -3,7 +3,7 @@
         <mat-card-title>{{hotel.name}}</mat-card-title>
         <mat-card-subtitle>Address: {{hotel.address}}</mat-card-subtitle>
     </mat-card-header>
-    <img class="card-image centered" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="Photo of Hotel">
+    <img class="card-image centered" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="No Photo Provided">
     <mat-card-content>
         <mat-slider max="5" min="0" step="1" thumbLabel="true" [(ngModel)]="rating.rating"></mat-slider>
         <!-- <mat-label>{{rating.rating !== undefined ? rating.rating : 'not rated yet'}}</mat-label> -->

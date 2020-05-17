@@ -68,15 +68,15 @@ export class RoomService extends BaseServiceClass {
       );
   }
 
-  deleteRoom(hotelId: string, id: string): Observable<boolean> {
-    const url = this.backendUrl + `hotels/${hotelId}/rooms/${id}`;
+  deleteRoom(hotelId: string, roomNumber: number): Observable<boolean> {
+    const url = this.backendUrl + `hotels/${hotelId}/rooms/${roomNumber}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Deleting room (id): + ${id}`)),
+        tap(_ => console.log(`[HotelService] Deleting room: + ${roomNumber}`)),
         catchError(this.handleError())
       );
   }

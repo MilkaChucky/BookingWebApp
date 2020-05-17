@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HotelService } from 'src/app/core/services/hotel.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { RoomModel } from 'src/app/shared/models/RoomModel';
 import { MatPaginator, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
-import { EditHotelComponent } from './edit/edit-hotel/edit-hotel.component';
-import { EditRoomComponent } from './edit/edit-room/edit-room.component';
 import { RoomService } from 'src/app/core/services/room.service';
-import { BookingService } from 'src/app/core/services/booking.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -34,9 +31,8 @@ export class AdminNavigationComponent implements OnInit {
   readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
-    private bService: BookingService,
     private hService: HotelService,
-    private route: ActivatedRoute,
+    private rService: RoomService,
     private router: Router,
     private snack: MatSnackBar,
     public dialog: MatDialog
@@ -50,11 +46,11 @@ export class AdminNavigationComponent implements OnInit {
       this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
 
       const initialSelection = [];
-      const allowMultiSelect = true;
+      const allowMultiSelect = false;
       this.selection = new SelectionModel<HotelModel>(allowMultiSelect, initialSelection);
 
       const initialRoomSelection = [];
-      const allowMultiSelectRooms = true;
+      const allowMultiSelectRooms = false;
       this.rSelection = new SelectionModel<RoomModel>(allowMultiSelectRooms, initialRoomSelection);
 
       this.dataSource.paginator = this.masterPaginator;
@@ -65,13 +61,11 @@ export class AdminNavigationComponent implements OnInit {
   async selectRow(row: HotelModel) {
     if (this.selection.isSelected(row)) {
       this.selection.deselect(row);
-      this.rooms = this.rooms.filter(r => {
-        return row.rooms.find(x => x === r) === undefined;
-      });
+      this.rooms = [];
       this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
     } else {
       this.selection.select(row);
-      this.rooms = this.rooms.concat(row.rooms);
+      this.rooms = row.rooms;
       this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
     }
   }
@@ -109,17 +103,17 @@ export class AdminNavigationComponent implements OnInit {
       this.snack.open('Please, select one or more hotel to delete first!', 'Warning', { duration: 2000 });
       return;
     }
-    this.selection.clear();
-    this.selection.selected.forEach(h => {
-      this.dataSource.data = this.dataSource.data.filter(x => x._id !== h._id);
-      this.hService.deleteHotel(h._id).subscribe(res => {
-        this.snack.open('Deleted successfully!', 'Update', {
-          duration: 2000
-        });
-      }, err => {
-        this.snack.open(err, 'Error', {
-          duration: 2000
-        });
+    const hotelId = this.selection.selected[0]._id;
+    this.hService.deleteHotel(hotelId).subscribe(() => {
+      this.snack.open('Deleted successfully!', 'Update', {
+        duration: 2000
+      });
+      this.hotels = this.dataSource.data.filter(x => x._id !== hotelId);
+      this.dataSource.data = this.dataSource.data.filter(x => x._id !== hotelId);
+      this.selection.clear();
+    }, err => {
+      this.snack.open(err, 'Error', {
+        duration: 2000
       });
     });
   }
@@ -148,20 +142,24 @@ export class AdminNavigationComponent implements OnInit {
       return;
     }
 
-    this.rSelection.selected.forEach(h => {
-      this.selection.selected[0].rooms = this.selection.selected[0].rooms.filter(r => r._id !== h._id);
-    });
+    const hotelId = this.selection.selected[0]._id;
+    const roomNumber = this.rSelection.selected[0].number;
 
-    this.hService.updateHotel(this.selection.selected[0]).subscribe(res => {
+    this.rService.deleteRoom(hotelId, roomNumber).subscribe(() => {
       this.snack.open('Delete successful!', 'Update', {
         duration: 2000
       });
+      // Refreshing Grid
+      this.rooms = this.hotels.find(h => h._id === hotelId).rooms.filter(r => r.number !== roomNumber);
+      this.hotels.find(h => h._id === hotelId).rooms = this.rooms;
+      this.dataSource = new MatTableDataSource<HotelModel>(this.hotels);
+      this.dataSourceRooms = new MatTableDataSource<RoomModel>(this.rooms);
+      this.rSelection.clear();
     }, err => {
       this.snack.open(err, 'Error', {
         duration: 2000
       });
     });
-    this.selection.clear();
   }
 
 }
