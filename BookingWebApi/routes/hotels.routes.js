@@ -84,8 +84,10 @@ router.route('/:hotelId/images')
             } catch (error) {
                 return next(error);
             }
-        })
-    .delete(
+        });
+
+router.route('/:hotelId/images/delete')
+    .post(
         allowForRole('admin'),
         deleteFiles(hotelImagesPath),
         async (req, res, next) => {
