@@ -23,7 +23,6 @@ export class RoomService extends BaseServiceClass {
     };
     return this.http.get<RoomModel[]>(url, httpOptions)
       .pipe(
-        tap(_ => console.log('[HotelService] Fetching rooms...')),
         catchError(this.handleError())
       );
   }
@@ -36,7 +35,6 @@ export class RoomService extends BaseServiceClass {
     };
     return this.http.get<RoomModel>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Fetching room for roomNumber, hotelid: ${roomNumber} + ${hotelId}`)),
         catchError(this.handleError())
       );
   }
@@ -49,7 +47,6 @@ export class RoomService extends BaseServiceClass {
     };
     return this.http.post<RoomModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Adding room: + ${dto}`)),
         catchError(this.handleError())
       );
   }
@@ -60,10 +57,8 @@ export class RoomService extends BaseServiceClass {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
-    console.log(JSON.stringify(dto));
     return this.http.put<RoomModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Updating room:\n ${JSON.stringify(dto)}`)),
         catchError(this.handleError())
       );
   }
@@ -76,7 +71,6 @@ export class RoomService extends BaseServiceClass {
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Deleting room: + ${roomNumber}`)),
         catchError(this.handleError())
       );
   }

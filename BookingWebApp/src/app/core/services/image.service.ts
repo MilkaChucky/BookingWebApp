@@ -23,7 +23,6 @@ export class ImageService extends BaseServiceClass {
     formData.append('file', photo, photo.name);
     return this.http.post<boolean>(url, formData, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Uploading photo for hotel: (hotel id, photo): + ${id} + ${photo}`)),
         catchError(this.handleError())
       );
   }
@@ -37,7 +36,6 @@ export class ImageService extends BaseServiceClass {
     formData.append('file', photo, photo.name);
     return this.http.post<boolean>(url, formData, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Uploading photo for room: (roomNumber, photo): + ${roomNumber} + ${photo}`)),
         catchError(this.handleError())
       );
   }

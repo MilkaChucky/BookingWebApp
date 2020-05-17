@@ -40,7 +40,6 @@ export class BookingNavigationComponent implements OnInit {
   async ngOnInit() {
     this.bService.getBookings().subscribe(res => {
       this.bookings = res;
-      console.log(res);
 
       this.dataSource = new MatTableDataSource<BookingDto>(this.bookings);
       this.rooms = [];
