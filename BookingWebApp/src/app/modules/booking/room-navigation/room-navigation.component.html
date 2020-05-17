@@ -4,13 +4,13 @@
     <form *ngIf='isPageInitialized' class="ghost-bookingform-white" [formGroup]='bookingForm'>
         <mat-form-field>
             <mat-label>From</mat-label>
-            <input matInput formControlName='from' [matDatepicker]="picker1">
+            <input matInput formControlName='from' [matDatepicker]="picker1" [min]="today" [matDatepickerFilter]="fromDateFilter">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
             <mat-label>To</mat-label>
-            <input matInput formControlName='to' [matDatepicker]="picker2">
+            <input matInput formControlName='to' [matDatepicker]="picker2" [min]="today" [matDatepickerFilter]="toDateFilter">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>
@@ -36,9 +36,9 @@
         </ng-container>
 
         <ng-container matColumnDef="images">
-            <th mat-header-cell *matHeaderCellDef> Picture </th>
+            <th mat-header-cell *matHeaderCellDef> Photos </th>
             <td mat-cell *matCellDef="let element">
-                <img src="{{imagesRoomsUrl + element.images[0]}}" alt="Photo of Room">
+                <app-image-viewer [url]='imagesRoomsUrl' [images]='element.images'></app-image-viewer>
             </td>
         </ng-container>
 
