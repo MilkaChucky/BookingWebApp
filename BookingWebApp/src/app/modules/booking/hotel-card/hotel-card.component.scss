@@ -8,10 +8,16 @@ mat-card.hotel-card {
     img.card-image {
         height: 125px;
     }
+
+    mat-card-content {
+        align-self: center;
+        font-weight: 500;
+        margin-top: 20px;
+    }
     
     position: relative;
     width: 250px;
-    height: 250px;
+    height: 300px;
 
     mat-card-subtitle {
         height: 35px;

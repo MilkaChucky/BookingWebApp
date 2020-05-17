@@ -4,6 +4,9 @@
         <mat-card-subtitle>Address: {{hotel.address}}</mat-card-subtitle>
     </mat-card-header>
     <img class="card-image centered" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="No Photo Provided">
+    <mat-card-content>
+        <mat-label>Average Score: {{average}}</mat-label>
+    </mat-card-content>
     <mat-card-actions>
         <button mat-button (click)='goToRoomNavigation()'>BOOK ROOM</button>
         <button mat-button (click)='goToReviews()'>REVIEWS</button>
