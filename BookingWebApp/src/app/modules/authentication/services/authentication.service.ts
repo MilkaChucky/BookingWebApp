@@ -16,7 +16,7 @@ export class AuthenticationService extends BaseServiceClass {
 
   constructor(private http: HttpClient, private router: Router) {
     super();
-    this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(sessionStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -55,7 +55,7 @@ export class AuthenticationService extends BaseServiceClass {
         catchError(this.handleError()),
         tap(res => {
           const user = res as UserModel;
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          sessionStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
         })
       );
@@ -73,7 +73,7 @@ export class AuthenticationService extends BaseServiceClass {
       .pipe(
         catchError(this.handleError()),
         tap(_ => {
-          localStorage.removeItem('currentUser');
+          sessionStorage.removeItem('currentUser');
           this.currentUserSubject.next(null);
           this.router.navigate(['']);
         })
