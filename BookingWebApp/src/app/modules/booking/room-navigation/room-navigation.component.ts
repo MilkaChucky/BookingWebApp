@@ -9,6 +9,7 @@ import { BookingService } from 'src/app/core/services/booking.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { RoomBookingModel } from 'src/app/shared/models/BookingModel';
+import { IntervalModel } from 'src/app/shared/models/IntervalModel';
 
 @Component({
   selector: 'app-room-navigation',
@@ -30,6 +31,44 @@ export class RoomNavigationComponent implements OnInit {
   readonly imagesRoomsUrl = environment.imagesRoomsUrl;
 
   hotelId: string;
+  readonly today: Date = new Date();
+  
+  private bookedIntervals = new Map<string, IntervalModel[]>();
+  private get mergedIntervals(): IntervalModel[] {
+    return [].concat(...Array.from(this.bookedIntervals.values()))
+  }
+
+  dateFilter = (date: Date): boolean => {
+    return !this.mergedIntervals.some(i => i.from <= date && date <= i.until);
+  }
+
+  fromDateFilter = (date: Date): boolean => {
+    const dateTo = this.bookingForm.get('to').value;
+    const mIntervals = this.mergedIntervals;
+    const minDate = dateTo && mIntervals.length && new Date(
+      Math.min.apply(
+        null,
+        mIntervals
+          .map(i => i.until)
+          .filter(until => until < dateTo)
+      )
+    );
+    return this.dateFilter(date) && (!dateTo || (date < dateTo && date > minDate))
+  }
+
+  toDateFilter = (date: Date): boolean => {
+    const dateFrom = this.bookingForm.get('from').value;
+    const mIntervals = this.mergedIntervals;
+    const maxDate = dateFrom && mIntervals.length && new Date(
+      Math.max.apply(
+        null,
+        mIntervals
+          .map(i => i.from)
+          .filter(from => from > dateFrom)
+      )
+    );
+    return this.dateFilter(date) && (!dateFrom || date > dateFrom) && (!maxDate || date < maxDate)
+  }
 
   constructor(
     private rService: RoomService,
@@ -66,8 +105,14 @@ export class RoomNavigationComponent implements OnInit {
   selectRow(row: RoomModel) {
     if (this.selection.isSelected(row)) {
       this.selection.deselect(row);
+      this.bookedIntervals.delete(row._id);
     } else {
       this.selection.select(row);
+      this.bookingForm.get('from').setValue(null);
+      this.bookingForm.get('to').setValue(null);
+      this.bService.getBookedIntervals(row._id).subscribe(intervals => {
+        this.bookedIntervals.set(row._id, intervals);
+      });
     }
   }
 
