@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -35,6 +35,30 @@ export class ImageService extends BaseServiceClass {
     const formData: FormData = new FormData();
     formData.append('file', photo, photo.name);
     return this.http.post<boolean>(url, formData, httpOptions)
+      .pipe(
+        catchError(this.handleError())
+      );
+  }
+
+  deleteHotelImage(photos: string[], id: string): Observable<boolean> {
+    const url = this.backendUrl + 'hotels/' + id + '/deleteimages';
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      withCredentials: true
+    };
+    return this.http.post<boolean>(url, JSON.stringify(photos), httpOptions)
+      .pipe(
+        catchError(this.handleError())
+      );
+  }
+
+  deleteRoomImage(photos: string[], hotelId: string, roomNumber: number): Observable<boolean> {
+    const url = this.backendUrl + 'hotels/' + hotelId + '/rooms/' + roomNumber + '/deleteimages';
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      withCredentials: true
+    };
+    return this.http.post<boolean>(url, JSON.stringify(photos), httpOptions)
       .pipe(
         catchError(this.handleError())
       );
