@@ -34,7 +34,7 @@ export class HeaderNavBarComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-        this.snackBar.open('Error while logging out!', 'Error', {
+        this.snackBar.open(err, 'Error', {
           duration: 2000
         });
     });

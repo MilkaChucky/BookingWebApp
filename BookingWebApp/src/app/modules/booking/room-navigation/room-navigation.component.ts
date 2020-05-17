@@ -98,7 +98,7 @@ export class RoomNavigationComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-      this.snack.open('Booking failed!', 'Update', {
+        this.snack.open(err, 'Error', {
         duration: 2000
       });
     });

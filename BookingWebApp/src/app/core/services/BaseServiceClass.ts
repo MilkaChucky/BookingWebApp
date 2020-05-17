@@ -14,7 +14,7 @@ export class BaseServiceClass {
     protected handleError() {
         return (error: any): Observable<any> => {
             console.error(error);
-            return throwError(error);
+            return throwError(error.error.message);
         };
     }
 }

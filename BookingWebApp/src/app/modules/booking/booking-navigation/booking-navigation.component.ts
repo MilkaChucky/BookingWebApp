@@ -73,7 +73,7 @@ export class BookingNavigationComponent implements OnInit {
       this.selection.selected[0].bookedRooms = this.rooms;
       this.snack.open('Booking deleted successfully!', 'Update', { duration: 2000 });
     }, err => {
-        this.snack.open('Error while deleting booking!', 'Error', { duration: 2000 });
+        this.snack.open(err, 'Error', { duration: 2000 });
     });
   }
 

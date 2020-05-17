@@ -39,7 +39,7 @@ export class LoginModalComponent implements OnInit {
       });
       this.dialogRef.close();
     }, err => {
-      this.snackBar.open('Error while logging in!', 'Error', {
+      this.snackBar.open(err, 'Error', {
         duration: 2000
       });
     });
@@ -55,7 +55,7 @@ export class LoginModalComponent implements OnInit {
       });
       this.dialogRef.close();
     }, err => {
-      this.snackBar.open('Error during registration!', 'Error', {
+      this.snackBar.open(err, 'Error', {
         duration: 2000
       });
     });

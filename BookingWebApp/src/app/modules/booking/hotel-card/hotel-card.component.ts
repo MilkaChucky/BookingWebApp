@@ -38,7 +38,7 @@ export class HotelCardComponent implements OnInit {
     this.rService.addReview(this.rating, this.hotel._id).subscribe( res => {
       this.snack.open('Review saved successfully!', 'Update', { duration: 2000 });
     }, err => {
-      this.snack.open('Error while saving review!', 'Error', { duration: 2000 });
+        this.snack.open(err, 'Error', { duration: 2000 });
     });
   }
 

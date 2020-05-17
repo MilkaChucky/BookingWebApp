@@ -113,15 +113,13 @@ export class AdminNavigationComponent implements OnInit {
     this.selection.selected.forEach(h => {
       this.dataSource.data = this.dataSource.data.filter(x => x._id !== h._id);
       this.hService.deleteHotel(h._id).subscribe(res => {
-        if (!!res) {
-          this.snack.open('Deleted successfully!', 'Update', {
-            duration: 2000
-          });
-        } else {
-          this.snack.open('Error while deleting!', 'Error', {
-            duration: 2000
-          });
-        }
+        this.snack.open('Deleted successfully!', 'Update', {
+          duration: 2000
+        });
+      }, err => {
+        this.snack.open(err, 'Error', {
+          duration: 2000
+        });
       });
     });
   }
@@ -159,7 +157,7 @@ export class AdminNavigationComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-      this.snack.open('Error while deleting rooms!', 'Error', {
+      this.snack.open(err, 'Error', {
         duration: 2000
       });
     });
