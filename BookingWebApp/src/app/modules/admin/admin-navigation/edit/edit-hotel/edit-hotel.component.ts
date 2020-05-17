@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource, MatDialog } from '@angular/material';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { HotelService } from 'src/app/core/services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageService } from 'src/app/core/services/image.service';
 import { environment } from 'src/environments/environment';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-add-hotel-modal',
@@ -27,7 +28,8 @@ export class EditHotelComponent implements OnInit {
     private iService: ImageService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {
 
   }
@@ -138,26 +140,48 @@ export class EditHotelComponent implements OnInit {
   }
 
   deleteImages() {
-    this.iService.deleteHotelImage(this.model.images, this.model._id).subscribe(res => {
-      this.snackBar.open('Photos removed successfully!', 'Update', {
-        duration: 2000
-      });
-    }, err => {
-      this.snackBar.open(err, 'Error', {
-        duration: 2000
-      });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: { title: 'Are you sure about deleting the all the images?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.iService.deleteHotelImages(this.model.images, this.model._id).subscribe(res => {
+          this.snackBar.open('Photos removed successfully!', 'Update', {
+            duration: 2000
+          });
+          this.model.images = [];
+          this.dataSource = new MatTableDataSource<string>(this.model.images);
+        }, err => {
+          this.snackBar.open(err, 'Error', {
+            duration: 2000
+          });
+        });
+      }
     });
   }
 
   deleteImage(name: string) {
-    this.iService.deleteHotelImage([name], this.model._id).subscribe(res => {
-      this.snackBar.open('Photo removed successfully!', 'Update', {
-        duration: 2000
-      });
-    }, err => {
-      this.snackBar.open(err, 'Error', {
-        duration: 2000
-      });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: { title: 'Are you sure about deleting the selected image?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.iService.deleteHotelImages([name], this.model._id).subscribe(res => {
+          this.snackBar.open('Photo removed successfully!', 'Update', {
+            duration: 2000
+          });
+          this.model.images = this.model.images.filter(x => x !== name);
+          this.dataSource = new MatTableDataSource<string>(this.model.images);
+        }, err => {
+          this.snackBar.open(err, 'Error', {
+            duration: 2000
+          });
+        });
+      }
     });
   }
 
