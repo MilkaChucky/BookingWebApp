@@ -31,7 +31,7 @@ export class EditRoomComponent implements OnInit {
 
   ngOnInit() {
     const roomNumber = parseInt(this.route.snapshot.params.id, 10);
-    this.isNew = roomNumber === this.route.snapshot.params.id;
+    this.isNew = this.route.snapshot.params.id === undefined;
     this.hotelId = this.route.snapshot.params.hotelId;
 
     if (!this.isNew) {
@@ -89,7 +89,7 @@ export class EditRoomComponent implements OnInit {
         }
         this.router.navigate(['admin']);
       }, err => {
-        this.snackBar.open('Error while saving!', 'Error', {
+        this.snackBar.open(err, 'Error', {
           duration: 2000
         });
       });
@@ -103,7 +103,7 @@ export class EditRoomComponent implements OnInit {
         }
         this.router.navigate(['admin']);
       }, err => {
-        this.snackBar.open('Error while saving!', 'Error', {
+        this.snackBar.open(err, 'Error', {
           duration: 2000
         });
       });
@@ -120,7 +120,7 @@ export class EditRoomComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-        this.snackBar.open('Error while uploading photo!', 'Error', {
+      this.snackBar.open(err, 'Error', {
         duration: 2000
       });
     });

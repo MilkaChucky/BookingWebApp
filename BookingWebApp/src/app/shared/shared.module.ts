@@ -8,6 +8,7 @@ import { MaterialModule } from './material.module';
 import { routes } from './../app-routing.module';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
     HttpClientModule
   ],
   declarations: [
+    ConfirmationDialogComponent
   ],
   exports: [
     MaterialModule,
@@ -32,6 +34,9 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
   ],
   providers: [
     HttpClientModule
+  ],
+  entryComponents: [
+    ConfirmationDialogComponent
   ]
 })
 export class SharedModule {

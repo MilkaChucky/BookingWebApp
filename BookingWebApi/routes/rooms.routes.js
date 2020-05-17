@@ -27,10 +27,15 @@ router.route('/')
         allowForRole('admin'),
         async (req, res, next) => {
             try {
+                console.log(req.body);
+                console.log(req.params.hotelId);
                 const hotel = await Hotel.findById(req.params.hotelId).exec();
                 hotel.rooms.push(req.body);
+                console.log(hotel.rooms)
                 const saved = await hotel.save();
+                console.log(saved)
                 const savedRoom = saved.rooms.find(room => room.number === req.body.number);
+                console.log(savedRoom)
 
                 return res.status(200).json(savedRoom);
             } catch (error) {

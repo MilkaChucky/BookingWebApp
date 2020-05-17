@@ -6,13 +6,23 @@ mat-card.hotel-card {
     padding: 16px;
 
     img.card-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
         height: 125px;
     }
     
     position: relative;
     width: 250px;
     height: 450px;
+
+    mat-card-subtitle {
+        height: 35px;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    mat-slider {
+        display: block !important;
+    }
+
 }

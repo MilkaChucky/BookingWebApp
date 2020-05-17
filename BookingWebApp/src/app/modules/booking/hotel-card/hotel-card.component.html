@@ -3,12 +3,11 @@
         <mat-card-title>{{hotel.name}}</mat-card-title>
         <mat-card-subtitle>Address: {{hotel.address}}</mat-card-subtitle>
     </mat-card-header>
-    <img class="card-image" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="Photo of Hotel">
+    <img class="card-image centered" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="No Photo Provided">
     <mat-card-content>
-        <mat-slider max="5" min="0" step="1" thumbLabel="true" [(ngModel)]="rating.rating">
-            </mat-slider>
-        <mat-label>{{rating.rating !== undefined ? rating.rating : 'not rated yet'}}</mat-label>
-        <mat-form-field [style.fontSize]="12">
+        <mat-slider max="5" min="0" step="1" thumbLabel="true" [(ngModel)]="rating.rating"></mat-slider>
+        <!-- <mat-label>{{rating.rating !== undefined ? rating.rating : 'not rated yet'}}</mat-label> -->
+        <mat-form-field class="centered" [style.fontSize]="12">
             <mat-label>Opinion</mat-label>
             <textarea matInput 
                     cdkTextareaAutosize 
@@ -18,9 +17,9 @@
                     cdkAutosizeMaxRows="5">
             </textarea>
         </mat-form-field>
-        <button mat-button (click)='submitReview()'>Submit Review</button>
     </mat-card-content>
     <mat-card-actions>
         <button mat-button (click)='goToRoomNavigation()'>BOOK ROOM</button>
+        <button mat-button (click)='submitReview()'>Submit Review</button>
     </mat-card-actions>
 </mat-card>
