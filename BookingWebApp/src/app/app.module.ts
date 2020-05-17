@@ -1,4 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { GestureConfig } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -20,6 +21,7 @@ import { AdminModule } from './modules/admin/admin.module';
     FooterComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     SharedModule,
     BrowserModule,
     AppRoutingModule,
@@ -27,10 +29,11 @@ import { AdminModule } from './modules/admin/admin.module';
     HomeModule,
     BookingModule,
     UtilityModule,
-    BrowserAnimationsModule,
     AdminModule
   ],
-  providers: [],
+  providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

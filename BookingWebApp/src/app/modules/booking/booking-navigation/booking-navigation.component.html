@@ -27,16 +27,19 @@
             <th mat-header-cell *matHeaderCellDef> Room Number </th>
             <td mat-cell *matCellDef="let element"> {{element.room.number}} </td>
         </ng-container>
+
         <ng-container matColumnDef="from">
             <th mat-header-cell *matHeaderCellDef> From </th>
-            <td mat-cell *matCellDef="let element"> {{element.from}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.from | date:'yyyy-MM-dd'}} </td>
         </ng-container>
+
         <ng-container matColumnDef="to">
             <th mat-header-cell *matHeaderCellDef> To </th>
-            <td mat-cell *matCellDef="let element"> {{element.until}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.until | date:'yyyy-MM-dd'}} </td>
         </ng-container>
+
         <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> To </th>
+            <th mat-header-cell *matHeaderCellDef> Cancel </th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon matTooltip='delete selected booking(s)' (click)='deleteBooking(element._id)'>delete</mat-icon>
             </td>

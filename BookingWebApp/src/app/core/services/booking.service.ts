@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { of, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { BookingModel, AddBookingDto, BookingDto } from 'src/app/shared/models/BookingModel';
 import { BaseServiceClass } from './BaseServiceClass';
 
@@ -13,10 +13,6 @@ export class BookingService extends BaseServiceClass {
 
   constructor(private http: HttpClient) {
     super();
-  }
-
-  bookRooms(): Observable<boolean> {
-    return of(true);
   }
 
   getBookings(): Observable<BookingDto[]> {
