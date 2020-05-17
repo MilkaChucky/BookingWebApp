@@ -105,8 +105,10 @@ router.route('/:roomNumber/images')
             } catch (error) {
                 return next(error);
             }
-        })
-    .delete(
+        });
+
+router.route('/:roomNumber/images/delete')
+    .post(
         allowForRole('admin'),
         deleteFiles(roomImagesPath),
         async (req, res, next) => {
