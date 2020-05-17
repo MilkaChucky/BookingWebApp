@@ -62,9 +62,7 @@ router.route('/')
                     },
                     {
                         $project: {
-                            'hotel._id': true,
-                            'hotel.name': true,
-                            'hotel.address': true,
+                            hotel: { $arrayElemAt: ['$hotel', 0] },
                             bookedRooms: bookingIds ?
                                 {
                                     $filter: {
@@ -77,14 +75,14 @@ router.route('/')
                                 } : true
                         }
                     },
-                    // {
-                    //     $lookup: {
-                    //         from: 'hotels',
-                    //         localField: 'bookedRooms.roomId',
-                    //         foreignField: 'rooms._id',
-                    //         as: 'bookedRooms.room'
-                    //     }
-                    // }
+                    {
+                        $project: {
+                            'hotel._id': true,
+                            'hotel.name': true,
+                            'hotel.address': true,
+                            bookedRooms: true
+                        }
+                    }
                 ]);
 
                 const bookedRoomIds = bookings.reduce((result, current) => {
@@ -303,12 +301,45 @@ router.route('/hotel/:hotelId/rating')
     .get(
         async (req, res, next) => {
             try {
-                const ratings = await Booking.find({
-                    hotel: ObjectId(req.params.hotelId),
-                    rating: { $gte: 1 }
-                }, {
-                    _id: 0, rating: 1, opinion: 1
-                }).exec();
+                // const ratings = await Booking.find({
+                //     hotel: ObjectId(req.params.hotelId),
+                //     rating: { $gte: 1 }
+                // }, {
+                //     _id: 0, rating: 1, opinion: 1
+                // }).exec();
+
+                const ratings = await Booking.aggregate([
+                    {
+                        $match: {
+                            hotel: ObjectId(req.params.hotelId),
+                            rating: { $gte: 1 }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'user',
+                            foreignField: '_id',
+                            as: 'user'
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: false,
+                            rating: true,
+                            opinion: true,
+                            user: { $arrayElemAt: ['$user', 0] }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: false,
+                            rating: true,
+                            opinion: true,
+                            email: '$user.email'
+                        }
+                    }
+                ]);
 
                 return res.status(200).json({
                     average: ratings.reduce((p, c) => p + c.rating, 0) / ratings.length,
