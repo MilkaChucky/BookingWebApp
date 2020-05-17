@@ -24,8 +24,8 @@ export interface BookingDto {
 
 export interface RoomBookingDto {
     _id: string;
-    from: Date | string;
-    until: Date | string;
+    from: Date;
+    until: Date;
     roomId: string;
     room: RoomModel;
 }
