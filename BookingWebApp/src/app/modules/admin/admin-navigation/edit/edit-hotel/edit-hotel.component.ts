@@ -91,7 +91,7 @@ export class EditHotelComponent implements OnInit {
         }
         this.router.navigate(['admin']);
       }, err => {
-        this.snackBar.open('Error while saving!', 'Error', {
+        this.snackBar.open(err, 'Error', {
           duration: 2000
         });
       });
@@ -105,7 +105,7 @@ export class EditHotelComponent implements OnInit {
         }
         this.router.navigate(['admin']);
       }, err => {
-        this.snackBar.open('Error while saving!', 'Error', {
+        this.snackBar.open(err, 'Error', {
           duration: 2000
         });
       });
@@ -118,7 +118,7 @@ export class EditHotelComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-      this.snackBar.open('Error while uploading photo!', 'Error', {
+      this.snackBar.open(err, 'Error', {
         duration: 2000
       });
     });

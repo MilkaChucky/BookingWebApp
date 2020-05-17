@@ -1,4 +1,5 @@
 <h1 class="ghost-headline-white">{{this.isNew ? 'Add' : 'Edit'}} Hotel</h1>
+
 <form *ngIf='isPageInitialized' class="ghost-form-white" [formGroup]='hotelForm'>
     <mat-form-field>
         <mat-label>Name</mat-label>
@@ -13,6 +14,7 @@
         <input type="file" class="upload-photo" (change)="getPhotoFile($event.target.files)" />
     </div>
 </form>
+
 <div class="form-toolbar">
     <button class='ghost-button-white' (click)="save()" cdkFocusInitial>Save</button>
     <button class='ghost-button-white' (click)="cancel()">Cancel</button>

@@ -1,3 +1,5 @@
+<h1 class="ghost-headline-white">Available Hotels</h1>
+
 <div class="hotel-cards" *ngIf='!!hotels'>
     <app-hotel-card *ngFor='let h of hotels' [hotel]='h'></app-hotel-card>
 </div>

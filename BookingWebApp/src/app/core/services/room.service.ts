@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { environment } from './../../../environments/environment';
 import { RoomModel } from './../../shared/models/RoomModel';
-import { of, Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { BaseServiceClass } from './BaseServiceClass';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoomService {
-  readonly backendUrl = environment.backendUrl;
+export class RoomService extends BaseServiceClass {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   getRooms(hotelId: string): Observable<RoomModel[]> {
     const url = this.backendUrl + `hotels/${hotelId}/rooms`;
@@ -23,7 +24,7 @@ export class RoomService {
     return this.http.get<RoomModel[]>(url, httpOptions)
       .pipe(
         tap(_ => console.log('[HotelService] Fetching rooms...')),
-        catchError(this.handleError<RoomModel[]>('getRooms', []))
+        catchError(this.handleError())
       );
   }
 
@@ -36,7 +37,7 @@ export class RoomService {
     return this.http.get<RoomModel>(url, httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Fetching room for roomNumber, hotelid: ${roomNumber} + ${hotelId}`)),
-        catchError(this.handleError<RoomModel>('getRoom', {} as RoomModel))
+        catchError(this.handleError())
       );
   }
 
@@ -49,7 +50,7 @@ export class RoomService {
     return this.http.post<RoomModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Adding room: + ${dto}`)),
-        catchError(this.handleError<RoomModel>('addRoom', {} as RoomModel))
+        catchError(this.handleError())
       );
   }
 
@@ -63,27 +64,21 @@ export class RoomService {
     return this.http.put<RoomModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[HotelService] Updating room:\n ${JSON.stringify(dto)}`)),
-        catchError(this.handleError<RoomModel>('updateRoom', {} as RoomModel))
+        catchError(this.handleError())
       );
   }
 
-  deleteRoom(hotelId: string, id: string): Observable<boolean> {
-    const url = this.backendUrl + `hotels/${hotelId}/rooms/${id}`;
+  deleteRoom(hotelId: string, roomNumber: number): Observable<boolean> {
+    const url = this.backendUrl + `hotels/${hotelId}/rooms/${roomNumber}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       withCredentials: true
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Deleting room (id): + ${id}`)),
-        catchError(this.handleError<boolean>('deleteRoom', false))
+        tap(_ => console.log(`[HotelService] Deleting room: + ${roomNumber}`)),
+        catchError(this.handleError())
       );
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
-  }
 }

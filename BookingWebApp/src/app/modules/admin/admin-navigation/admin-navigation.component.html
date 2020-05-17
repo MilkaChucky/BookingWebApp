@@ -1,3 +1,5 @@
+<h1 class="ghost-headline-white">Administrative Navigation</h1>
+
 <div class="toolbar">
     <mat-icon matTooltip='add new hotel' (click)='addHotel()' class="ghost-mat-icon-white">add</mat-icon>
     <mat-icon matTooltip='edit selected hotel' (click)='editHotel()' class="ghost-mat-icon-white">edit</mat-icon>
@@ -21,7 +23,7 @@
         <ng-container matColumnDef="image">
             <th mat-header-cell *matHeaderCellDef> Address </th>
             <td mat-cell *matCellDef="let element">
-                <img src="{{imagesHotelsUrl + element.images[0]}}" alt="Photo of Hotel">
+                <img src="{{imagesHotelsUrl + element.images[0]}}" alt="No Photo Provided">
             </td>
         </ng-container>
 
@@ -61,7 +63,7 @@
         <ng-container matColumnDef="image">
             <th mat-header-cell *matHeaderCellDef> Address </th>
             <td mat-cell *matCellDef="let element">
-                <img src="{{imagesRoomsUrl + element.images[0]}}" alt="Photo of Hotel">
+                <img src="{{imagesRoomsUrl + element.images[0]}}" alt="No Photo Provided">
             </td>
         </ng-container>
 

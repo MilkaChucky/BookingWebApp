@@ -1,27 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { environment } from './../../../environments/environment';
 import { of, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { BookingModel, AddBookingDto, BookingDto } from 'src/app/shared/models/BookingModel';
+import { BaseServiceClass } from './BaseServiceClass';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BookingService {
-  readonly backendUrl = environment.backendUrl;
+export class BookingService extends BaseServiceClass {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
-  /*
-    /api/bookings GET, DELETE
-    /api/bookings/:bookingId PUT, DELETE
-    /api/bookings/hotel/:hotelId POST
-    /api/bookings/hotel/:hotelId/rate (amit ratingre fogok nemsokára javítani majd) POST, DELETE
-  */
-
-  bookRooms(asd?: any): Observable<boolean> {
+  bookRooms(): Observable<boolean> {
     return of(true);
   }
 
@@ -34,7 +28,7 @@ export class BookingService {
     return this.http.get<BookingDto[]>(url, httpOptions)
       .pipe(
         tap(_ => console.log('[BookingService] Fetching bookings...')),
-        catchError(this.handleError<BookingDto[]>([]))
+        catchError(this.handleError())
       );
   }
 
@@ -47,7 +41,7 @@ export class BookingService {
     return this.http.post<AddBookingDto>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[BookingService] Adding booking: + ${dto}`)),
-        catchError(this.handleError<AddBookingDto>({} as AddBookingDto))
+        catchError(this.handleError())
       );
   }
 
@@ -60,7 +54,7 @@ export class BookingService {
     return this.http.put<BookingModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
         tap(_ => console.log(`[BookingService] Updating booking: + ${dto}`)),
-        catchError(this.handleError<BookingModel>({} as BookingModel))
+        catchError(this.handleError())
       );
   }
 
@@ -73,14 +67,7 @@ export class BookingService {
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
         tap(_ => console.log(`[BookingService] Deleting booking: + ${bookingId}`)),
-        catchError(this.handleError<boolean>(false))
+        catchError(this.handleError())
       );
-  }
-
-  private handleError<T>(result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
   }
 }

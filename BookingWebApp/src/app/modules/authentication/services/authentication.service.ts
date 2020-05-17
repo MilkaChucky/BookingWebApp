@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 
 import { environment } from './../../../../environments/environment';
 import { UserModel } from './../../../shared/models/UserModel';
 import { Router } from '@angular/router';
 import { LoginData } from 'src/app/shared/models/LoginData';
+import { BaseServiceClass } from 'src/app/core/services/BaseServiceClass';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
+export class AuthenticationService extends BaseServiceClass {
   private currentUserSubject: BehaviorSubject<UserModel>;
   public currentUser: Observable<UserModel>;
-  readonly backendUrl = environment.backendUrl;
 
   constructor(private http: HttpClient, private router: Router) {
+    super();
     this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -40,7 +41,7 @@ export class AuthenticationService {
     return of(result);
   }
 
-  login(email: string, password: string): Observable<string> {
+  login(email: string, password: string): Observable<object> {
     const url = this.backendUrl + 'users/login';
     const httpOptions = {
       headers: new HttpHeaders({
@@ -49,19 +50,18 @@ export class AuthenticationService {
       withCredentials: true
     };
     const loginData = { email, password };
-    let result = 'error';
-    this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions).subscribe( res => {
-      const user = res as UserModel;
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      this.currentUserSubject.next(user);
-      result = 'success';
-    }, err => {
-      console.error(err);
-    });
-    return of(result);
+    return this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions)
+      .pipe(
+        catchError(this.handleError()),
+        tap(res => {
+          const user = res as UserModel;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        })
+      );
   }
 
-  logout(): Observable<boolean> {
+  logout(): Observable<object> {
     const url = this.backendUrl + 'users/logout';
     const httpOptions = {
       headers: new HttpHeaders({
@@ -69,16 +69,15 @@ export class AuthenticationService {
       }),
       withCredentials: true
     };
-    let result = false;
-    this.http.post<object>(url, JSON.stringify(this.currentUserValue), httpOptions).subscribe(res => {
-      result = true;
-      localStorage.removeItem('currentUser');
-      this.currentUserSubject.next(null);
-      this.router.navigate(['']);
-    }, err => {
-      console.error(err);
-    });
-    return of(result);
+    return this.http.post<object>(url, JSON.stringify(this.currentUserValue), httpOptions)
+      .pipe(
+        catchError(this.handleError()),
+        tap(_ => {
+          localStorage.removeItem('currentUser');
+          this.currentUserSubject.next(null);
+          this.router.navigate(['']);
+        })
+      );
   }
 
   isAuthenticated(): boolean {
@@ -92,4 +91,5 @@ export class AuthenticationService {
   isAuthAndGuest(): boolean {
     return this.isAuthenticated() && this.currentUserValue.role === 'guest';
   }
+
 }
