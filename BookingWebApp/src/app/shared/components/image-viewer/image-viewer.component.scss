@@ -1,6 +1,7 @@
 div {
     display: flex;
     flex-direction: row;
+    max-width: 250px;
 
     user-select: none;
     -moz-user-select: none;
