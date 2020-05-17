@@ -155,7 +155,7 @@ export class AdminNavigationComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '500px',
-      data: { title: 'Are you sure about deleting the room?' }
+      data: { title: 'Are you sure about deleting the selected room?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

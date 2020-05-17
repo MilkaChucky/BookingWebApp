@@ -6,6 +6,7 @@ import { BookingService } from 'src/app/core/services/booking.service';
 import { environment } from 'src/environments/environment';
 import { BookingDto, RoomBookingDto } from 'src/app/shared/models/BookingModel';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-booking-navigation',
@@ -67,13 +68,22 @@ export class BookingNavigationComponent implements OnInit {
   }
 
   deleteBooking(id: string) {
-    this.bService.deleteBooking(id).subscribe(res => {
-      this.rooms = this.rooms.filter(x => x._id !== id);
-      this.dataSourceRooms = new MatTableDataSource<RoomBookingDto>(this.rooms);
-      this.selection.selected[0].bookedRooms = this.rooms;
-      this.snack.open('Booking deleted successfully!', 'Update', { duration: 2000 });
-    }, err => {
-        this.snack.open(err, 'Error', { duration: 2000 });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: { title: 'Are you sure about deleting the selected booking?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bService.deleteBooking(id).subscribe(res => {
+          this.rooms = this.rooms.filter(x => x._id !== id);
+          this.dataSourceRooms = new MatTableDataSource<RoomBookingDto>(this.rooms);
+          this.selection.selected[0].bookedRooms = this.rooms;
+          this.snack.open('Booking deleted successfully!', 'Update', { duration: 2000 });
+        }, err => {
+          this.snack.open(err, 'Error', { duration: 2000 });
+        });
+      }
     });
   }
 
