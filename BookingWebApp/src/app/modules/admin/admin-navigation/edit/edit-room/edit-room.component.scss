@@ -7,3 +7,22 @@ form {
 .upload-photo {
     margin-left: 10px;
 }
+
+div.table-wrapper {
+    display: block;
+    position: relative;
+    width: 90%;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    table, .mat-paginator {
+        width: 100%;
+        tr.selected {
+            background-color: beige;
+        }
+        td, th {
+            text-align-last: center;
+            text-align: center;
+        }
+    }
+}

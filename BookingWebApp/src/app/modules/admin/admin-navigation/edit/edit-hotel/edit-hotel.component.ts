@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
 import { HotelService } from 'src/app/core/services/hotel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageService } from 'src/app/core/services/image.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-add-hotel-modal',
@@ -17,6 +18,9 @@ export class EditHotelComponent implements OnInit {
   isPageInitialized = false;
   isNew = false;
   fileToUpload: File = null;
+  dataSource: MatTableDataSource<string>;
+
+  readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
     private hService: HotelService,
@@ -43,6 +47,7 @@ export class EditHotelComponent implements OnInit {
               Validators.required
             ])
           });
+          this.dataSource = new MatTableDataSource<string>(this.model.images);
         } else {
           this.model = {} as HotelModel;
           this.hotelForm = new FormGroup({
@@ -135,6 +140,18 @@ export class EditHotelComponent implements OnInit {
   deleteImages() {
     this.iService.deleteHotelImage(this.model.images, this.model._id).subscribe(res => {
       this.snackBar.open('Photos removed successfully!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snackBar.open(err, 'Error', {
+        duration: 2000
+      });
+    });
+  }
+
+  deleteImage(name: string) {
+    this.iService.deleteHotelImage([name], this.model._id).subscribe(res => {
+      this.snackBar.open('Photo removed successfully!', 'Update', {
         duration: 2000
       });
     }, err => {
