@@ -3,7 +3,7 @@
         <mat-card-title>{{hotel.name}}</mat-card-title>
         <mat-card-subtitle>Address: {{hotel.address}}</mat-card-subtitle>
     </mat-card-header>
-    <img class="card-image centered" src="{{imagesHotelsUrl + hotel.images[0]}}" alt="No Photo Provided">
+    <app-image-viewer [url]='imagesHotelsUrl' [images]='hotel.images'></app-image-viewer>
     <mat-card-content>
         <mat-label>Average Score: {{average}}</mat-label>
     </mat-card-content>

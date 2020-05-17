@@ -130,4 +130,16 @@ export class EditRoomComponent implements OnInit {
     this.router.navigate(['admin']);
   }
 
+  deleteImages() {
+    this.iService.deleteRoomImage(this.model.images, this.hotelId, this.model.number).subscribe(res => {
+      this.snackBar.open('Photos removed successfully!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snackBar.open(err, 'Error', {
+        duration: 2000
+      });
+    });
+  }
+
 }

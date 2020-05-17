@@ -132,4 +132,16 @@ export class EditHotelComponent implements OnInit {
     this.fileToUpload = files.item(0);
   }
 
+  deleteImages() {
+    this.iService.deleteHotelImage(this.model.images, this.model._id).subscribe(res => {
+      this.snackBar.open('Photos removed successfully!', 'Update', {
+        duration: 2000
+      });
+    }, err => {
+      this.snackBar.open(err, 'Error', {
+        duration: 2000
+      });
+    });
+  }
+
 }
