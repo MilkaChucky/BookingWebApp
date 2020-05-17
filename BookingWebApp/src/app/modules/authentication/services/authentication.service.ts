@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
-import { environment } from './../../../../environments/environment';
 import { UserModel } from './../../../shared/models/UserModel';
 import { Router } from '@angular/router';
 import { LoginData } from 'src/app/shared/models/LoginData';
@@ -32,13 +31,10 @@ export class AuthenticationService extends BaseServiceClass {
       })
     };
     const loginData = { email, password } as LoginData;
-    let result;
-    this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions).subscribe(res => {
-      result = res;
-    }, err => {
-        console.error(err);
-    });
-    return of(result);
+    return this.http.post<UserModel>(url, JSON.stringify(loginData), httpOptions)
+      .pipe(
+        catchError(this.handleError())
+      );
   }
 
   login(email: string, password: string): Observable<object> {

@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HotelModel } from 'src/app/shared/models/HotelModel';
-import { HotelService } from 'src/app/core/services/hotel.service';
 import { MatSlider, MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
-import { BookingModel } from 'src/app/shared/models/BookingModel';
 import { environment } from 'src/environments/environment';
 import { RatingModel, RatingsDto } from 'src/app/shared/models/RatingModel';
 import { ReviewService } from 'src/app/core/services/review.service';
@@ -20,7 +18,6 @@ export class HotelCardComponent implements OnInit {
   readonly imagesHotelsUrl = environment.imagesHotelsUrl;
 
   constructor(
-    private hService: HotelService,
     private rService: ReviewService,
     private snack: MatSnackBar,
     private router: Router
@@ -30,8 +27,9 @@ export class HotelCardComponent implements OnInit {
 
   async ngOnInit() {
     this.rService.getReview(this.hotel._id).subscribe((res: RatingsDto) => {
-      console.log(res);
-      this.rating = res.ratings[0];
+      if (!!res.ratings[0]) {
+        this.rating = res.ratings[0];
+      }
     }, err => {
       this.snack.open(err, 'Error', { duration: 2000 });
     });
@@ -42,7 +40,7 @@ export class HotelCardComponent implements OnInit {
   }
 
   submitReview() {
-    this.rService.addReview(this.rating, this.hotel._id).subscribe( res => {
+    this.rService.addReview(this.rating, this.hotel._id).subscribe( () => {
       this.snack.open('Review saved successfully!', 'Update', { duration: 2000 });
     }, err => {
         this.snack.open(err, 'Error', { duration: 2000 });
