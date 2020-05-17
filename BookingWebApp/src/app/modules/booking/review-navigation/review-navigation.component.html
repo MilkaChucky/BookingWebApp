@@ -5,7 +5,6 @@
 <mat-card class="hotel-card">
     <mat-card-content>
         <mat-slider max="5" min="0" step="1" thumbLabel="true" [(ngModel)]="rating.rating"></mat-slider>
-        <mat-label class="average-score-label">Average Score: {{this.ratings.average}}</mat-label>
         <mat-form-field class="centered" [style.fontSize]="12">
             <mat-label>Opinion</mat-label>
             <textarea matInput cdkTextareaAutosize [(ngModel)]="rating.opinion" #autosize="cdkTextareaAutosize"

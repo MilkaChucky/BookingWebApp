@@ -17,7 +17,6 @@ export class ReviewNavigationComponent implements OnInit {
   dataSource: MatTableDataSource<RatingModel>;
 
   rating: RatingModel;
-  ratings: RatingsDto;
   hotelId: string;
 
   constructor(
@@ -27,7 +26,6 @@ export class ReviewNavigationComponent implements OnInit {
     private aService: AuthenticationService,
     public dialog: MatDialog
   ) {
-    this.ratings = { average: 0, ratings: [] };
     this.rating = { rating: 0 };
   }
 
@@ -38,15 +36,14 @@ export class ReviewNavigationComponent implements OnInit {
 
   private refreshReview() {
     this.rService.getReview(this.hotelId).subscribe((res: RatingsDto) => {
-      this.ratings = res;
-      if (!!this.ratings.ratings && this.ratings.ratings.length > 0) {
+      if (!!res.ratings && res.ratings.length > 0) {
         const email = this.aService.getCurrentUserEmail();
         const temp = res.ratings.find(r => r.email === email);
         if (!!temp) {
           this.rating = { ...temp };
         }
       }
-      this.dataSource = new MatTableDataSource<RatingModel>(this.ratings.ratings);
+      this.dataSource = new MatTableDataSource<RatingModel>(res.ratings);
       this.dataSource.paginator = this.masterPaginator;
     }, err => {
       this.snack.open(err, 'Error', { duration: 2000 });

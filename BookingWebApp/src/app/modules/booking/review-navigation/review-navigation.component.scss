@@ -32,7 +32,7 @@ mat-card {
     
     position: relative;
     width: 250px;
-    height: 250px;
+    height: 220px;
 
     mat-card-content {
         mat-form-field {
@@ -42,10 +42,6 @@ mat-card {
             margin-top: 5px;
             margin-bottom: 10px;
             display: block !important;
-        }
-        mat-label.average-score-label {
-            display: block;
-            margin-bottom: 20px;
         }
     }
 }
