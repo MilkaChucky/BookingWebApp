@@ -168,7 +168,7 @@ export class EditRoomComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.iService.deleteHotelImages([name], this.model._id).subscribe(res => {
+        this.iService.deleteRoomImages([name], this.hotelId, this.model.number).subscribe(res => {
           this.snackBar.open('Photo removed successfully!', 'Update', {
             duration: 2000
           });
