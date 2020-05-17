@@ -34,7 +34,6 @@ export class EditHotelComponent implements OnInit {
     if (!this.isNew) {
       this.hService.getHotel(id).subscribe(res => {
         this.model = res;
-        console.log('[EditHotelComponent-ngOnInit] Hotel: ', this.model);
         if (!!this.model) {
           this.hotelForm = new FormGroup({
             name: new FormControl(this.model.name, [

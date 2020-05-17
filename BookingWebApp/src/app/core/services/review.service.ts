@@ -23,7 +23,6 @@ export class ReviewService extends BaseServiceClass {
     };
     return this.http.post<any>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[ReviewService] Adding review to: ${hotelId}`)),
         catchError(this.handleError())
       );
   }
@@ -36,7 +35,6 @@ export class ReviewService extends BaseServiceClass {
     };
     return this.http.get<RatingsDto>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[ReviewService] Adding review to: ${hotelId}`)),
         catchError(this.handleError())
       );
   }

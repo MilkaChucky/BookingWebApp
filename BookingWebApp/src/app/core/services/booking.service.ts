@@ -23,7 +23,6 @@ export class BookingService extends BaseServiceClass {
     };
     return this.http.get<BookingDto[]>(url, httpOptions)
       .pipe(
-        tap(_ => console.log('[BookingService] Fetching bookings...')),
         catchError(this.handleError())
       );
   }
@@ -36,7 +35,6 @@ export class BookingService extends BaseServiceClass {
     };
     return this.http.post<AddBookingDto>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[BookingService] Adding booking: + ${dto}`)),
         catchError(this.handleError())
       );
   }
@@ -49,7 +47,6 @@ export class BookingService extends BaseServiceClass {
     };
     return this.http.put<BookingModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[BookingService] Updating booking: + ${dto}`)),
         catchError(this.handleError())
       );
   }
@@ -62,7 +59,6 @@ export class BookingService extends BaseServiceClass {
     };
     return this.http.delete<boolean>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[BookingService] Deleting booking: + ${bookingId}`)),
         catchError(this.handleError())
       );
   }

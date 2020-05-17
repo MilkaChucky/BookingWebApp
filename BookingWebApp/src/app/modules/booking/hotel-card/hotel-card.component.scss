@@ -8,21 +8,23 @@ mat-card.hotel-card {
     img.card-image {
         height: 125px;
     }
+
+    mat-card-content {
+        align-self: center;
+        font-weight: 500;
+        margin-top: 20px;
+    }
     
     position: relative;
     width: 250px;
-    height: 450px;
+    height: 300px;
 
     mat-card-subtitle {
         height: 35px;
     }
 
-    mat-form-field {
-        width: 100%;
-    }
-
-    mat-slider {
-        display: block !important;
+    mat-card-actions {
+        align-self: center;
     }
 
 }

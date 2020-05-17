@@ -14,10 +14,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule.forRoot(
-      routes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),  // TODO: remove in finished
+    RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule

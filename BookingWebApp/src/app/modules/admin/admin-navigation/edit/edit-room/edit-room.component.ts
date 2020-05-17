@@ -37,7 +37,6 @@ export class EditRoomComponent implements OnInit {
     if (!this.isNew) {
       this.rService.getRoom(this.hotelId, roomNumber).subscribe( res => {
         this.model = res;
-        console.log(res);
         this.roomForm = new FormGroup({
           number: new FormControl(this.model.number, [
             Validators.required

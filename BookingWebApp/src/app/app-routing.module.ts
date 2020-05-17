@@ -9,6 +9,8 @@ import { AdminNavigationComponent } from './modules/admin/admin-navigation/admin
 import { EditHotelComponent } from './modules/admin/admin-navigation/edit/edit-hotel/edit-hotel.component';
 import { EditRoomComponent } from './modules/admin/admin-navigation/edit/edit-room/edit-room.component';
 import { BookingNavigationComponent } from './modules/booking/booking-navigation/booking-navigation.component';
+import { ReviewNavigationComponent } from './modules/booking/review-navigation/review-navigation.component';
+import { AdminGuard } from './modules/authentication/admin.guard';
 
 export const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -32,11 +34,15 @@ export const routes: Routes = [
       {
         path: ':id/rooms',
         component: RoomNavigationComponent
+      },
+      {
+        path: ':id/reviews',
+        component: ReviewNavigationComponent
       }
     ]
   },
   { path: 'admin',
-    canActivate: [AuthGuard],
+    canActivate: [AdminGuard],
     children: [
       {
         path: '',

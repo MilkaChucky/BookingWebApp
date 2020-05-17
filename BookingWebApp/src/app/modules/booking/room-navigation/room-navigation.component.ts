@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HotelService } from 'src/app/core/services/hotel.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RoomModel } from 'src/app/shared/models/RoomModel';
 import { MatPaginator, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -9,6 +8,7 @@ import { RoomService } from 'src/app/core/services/room.service';
 import { BookingService } from 'src/app/core/services/booking.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { RoomBookingModel } from 'src/app/shared/models/BookingModel';
 
 @Component({
   selector: 'app-room-navigation',
@@ -35,7 +35,6 @@ export class RoomNavigationComponent implements OnInit {
     private rService: RoomService,
     private bService: BookingService,
     private route: ActivatedRoute,
-    private router: Router,
     private snack: MatSnackBar
   ) { }
 
@@ -89,14 +88,20 @@ export class RoomNavigationComponent implements OnInit {
     const dateFrom = this.bookingForm.get('from').value;
     const dateTo = this.bookingForm.get('to').value;
 
-    this.bService.addBooking({ rooms: [{
-      roomId: this.selection.selected[0]._id,
-      from: dateFrom,
-      until: dateTo
-    }]}, this.hotelId).subscribe(res => {
-      this.snack.open('Booking is successfull!', 'Update', {
+    const roomBookings: RoomBookingModel[] = [];
+    this.selection.selected.forEach(r => {
+      roomBookings.push({
+        roomId: r._id,
+        from: dateFrom,
+        until: dateTo
+      });
+    });
+
+    this.bService.addBooking({ rooms: roomBookings }, this.hotelId).subscribe(() => {
+      this.snack.open('Booking is successfull! Informational email about the booking is sent to you!', 'Update', {
         duration: 2000
       });
+      this.selection.clear();
     }, err => {
         this.snack.open(err, 'Error', {
         duration: 2000

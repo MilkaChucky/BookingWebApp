@@ -23,7 +23,6 @@ export class HotelService extends BaseServiceClass {
     };
     return this.http.get<HotelModel[]>(url, httpOptions)
       .pipe(
-        tap(_ => console.log('[HotelService] Fetching hotels...')),
         catchError(this.handleError())
       );
   }
@@ -36,7 +35,6 @@ export class HotelService extends BaseServiceClass {
     };
     return this.http.get<HotelModel>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Fetching hotel for id: + ${id}`)),
         catchError(this.handleError())
       );
   }
@@ -49,7 +47,6 @@ export class HotelService extends BaseServiceClass {
     };
     return this.http.post<HotelModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Adding hotel: + ${dto}`)),
         catchError(this.handleError())
       );
   }
@@ -62,7 +59,6 @@ export class HotelService extends BaseServiceClass {
     };
     return this.http.put<HotelModel>(url, JSON.stringify(dto), httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Updating hotel: + ${dto}`)),
         catchError(this.handleError())
       );
   }
@@ -75,7 +71,6 @@ export class HotelService extends BaseServiceClass {
     };
     return this.http.delete<HotelModel>(url, httpOptions)
       .pipe(
-        tap(_ => console.log(`[HotelService] Deleting hotel (id): + ${id}`)),
         catchError(this.handleError())
       );
   }
