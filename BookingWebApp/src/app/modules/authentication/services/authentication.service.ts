@@ -88,4 +88,8 @@ export class AuthenticationService extends BaseServiceClass {
     return this.isAuthenticated() && this.currentUserValue.role === 'guest';
   }
 
+  getCurrentUserEmail(): string {
+    return this.currentUserValue.email;
+  }
+
 }

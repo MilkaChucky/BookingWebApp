@@ -32,15 +32,7 @@ mat-card {
     
     position: relative;
     width: 250px;
-    height: 200px;
-
-    mat-card-subtitle {
-        height: 35px;
-    }
-
-    mat-card-actions {
-        align-self: center;
-    }
+    height: 250px;
 
     mat-card-content {
         mat-form-field {
@@ -48,7 +40,12 @@ mat-card {
         }
         mat-slider {
             margin-top: 5px;
+            margin-bottom: 10px;
             display: block !important;
+        }
+        mat-label.average-score-label {
+            display: block;
+            margin-bottom: 20px;
         }
     }
 }
