@@ -2,8 +2,8 @@ version: '3'
 services:
   mongodb:
     image: mongo
-    expose:
-      - "27017"
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
     volumes:
       - db:/data/db
     deploy:
