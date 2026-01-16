@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/MilkaChucky/BookingWebApp#readme",
   "dependencies": {
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^6.0.0",
     "body-parser": "^1.20.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
